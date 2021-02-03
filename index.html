@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>ATCG - UPH Biotech</title>
+<meta name="viewport" content="width=640, initial-scale=1, user-scalable=yes">
+<script src="res/howler.min.js"></script>
+<script src="res/pixi.min.js"></script>
+<script src="res/slider.js"></script>
+<style>
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {margin:0;padding:0;height: 100%;}
+body {
+    margin:0;
+    padding:0; 
+    background-color: #000000; 
+    overflow:hidden;
+    height: 100%;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+input, select { 
+    opacity: 0.7;;
+    padding: 0px 10px; 
+    font-size: 12pt; 
+    font-weight: bold;
+    background-color: #09ffff; 
+    color: #000000;
+    border:#db32db solid 2px;
+    border-radius: 10px;;
+    width:150px;
+}
+.btn {
+    margin-top:10px;
+    padding: 50px 80px 0px 80px;
+    text-align: center;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    overflow: hidden;
+    border-radius: 15px;
+}
+#btnstop {
+    width:90%;
+    visibility: hidden;
+}
+
+#quizpanel {
+    position: fixed;
+    margin-top: 30px;
+    margin-left: 40px;
+}
+
+#entryform {
+    width: 100%;
+    height: 200px;
+    overflow-y: auto;
+}
+
+@media (min-height: 600px) {
+    #entryform {
+        height: auto;
+    }
+    input, select { 
+        opacity: 0.7;;
+        padding: 2px 10px; 
+        font-size: 16pt; 
+        font-weight: bold;
+        background-color: #09ffff; 
+        color: #000000;
+        border:#db32db solid 2px;
+        border-radius: 10px;;
+        width:200px;
+    }
+    .btn {
+        margin-top:20px;
+        padding: 60px 100px 0px 100px;
+        text-align: center;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        overflow: hidden;
+        border-radius: 15px;
+        background-color: black;
+    }
+    #btnstop {
+        width:50%;
+    }
+    #quizpanel {
+        position: fixed;
+        margin-top: 50px;
+        margin-left: 80px;
+    }
+}
+.border { border:2px solid yellow; }
+.col { display:inline-block; }
+.col_left { display:inline-block; text-align: left;}
+.slider__container {
+  background-color: #000000; 
+  position: fixed;
+  display: block;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  -webkit-transition: -webkit-transform 500ms ease-in-out;
+  transition: -webkit-transform 500ms ease-in-out;
+  -o-transition: transform 500ms ease-in-out;
+  transition: transform 500ms ease-in-out;
+}
+.slider__page {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+#intro {
+    background-color: #000000;
+    background-image: url('res/intro.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+#splash {
+    background-color: #000000;
+    background-image: url('res/splash.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+#rules {
+    background-color: #000000;
+    background-image: url('res/form.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    overflow: hidden;
+}
+#form {
+    background-color: #000000;
+    background-image: url('res/form.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    overflow: hidden;
+}
+#arena {
+    background-color: #000000;
+    background-image: url('res/form.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    overflow: hidden;
+}
+#quiz {
+    background-color: #000000;
+    background-image: url('res/frame.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    overflow: hidden;
+}
+#qurl {
+    width: 90%;
+    height: 90%;
+}
+#qcontainer {
+    padding-left: 40px;
+    padding-top: 120px;
+    width: 100%;
+    height: 100%;
+}
+#qbanner {
+    position: fixed;
+    margin-top: -40px;
+    padding-left: 40px;
+    width: 88%;
+    height: 50px;
+    background-color: black;
+    color: gray;
+    font-weight: bold;
+    font-size: 16pt;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+}
+.stop_on {
+    background-color: black;
+    background-image: url('res/stop_on.png');
+}
+.stop_off {
+    background-color: silver;
+    background-image: url('res/stop_off.png');
+}
+#shieldlist {
+    padding: 60px 100px 0px 100px;
+    color: #fff;
+    text-align: center;
+}
+#status {
+    font-size:16pt;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    color: lime;
+}
+#playerform {
+    padding: 60px 100px 0px 100px;
+    color: #fff;
+    text-align: center;
+}
+#playerlist {
+    padding: 60px 100px 0px 100px;
+    color: #fff;
+    text-align: center;
+}
+.glow {
+    text-align: center;
+    font-size: 18pt;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: white;
+    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #49ff18, 0 0 30px #49ff18, 0 0 40px #49ff18, 0 0 55px #49ff18, 0 0 75px #49ff18    
+}
+.header {
+    text-align: left;
+    font-size: 32pt;
+}
+.entry {
+    font-size: 18pt;
+    padding: 5px;
+}
+.player_info {
+    text-align: left;
+    vertical-align: top;;
+    background-color: grey;
+    display: inline-block;
+    width:300px;
+}
+.player_name {
+    text-align: left;
+    vertical-align: top;;
+    font-size: 24pt;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;    
+    word-wrap: none;
+}
+.player_location {
+    text-align: left;
+    vertical-align: top;;
+    font-size: 14pt;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;    
+    word-wrap: none;    
+}
+.avatar {
+    width: 42px;
+    height: 58px;
+    background-image: url('res/mavatar.png');
+    background-repeat: no-repeat;
+    margin: 0px;
+}
+.avatar0 { background-position: 0px 0px; }
+.avatar1 { background-position: -42px 0px;}
+.avatar2 { background-position: -84px 0px;}
+.avatar3 { background-position: -126px 0px;}
+.avatar4 { background-position: 0px -58px; }
+.avatar5 { background-position: -42px -58px;}
+.avatar6 { background-position: -84px -58px;}
+.avatar7 { background-position: -126px -58px;}
+.avatar8 { background-position: 0px -116px; }
+.avatar9 { background-position: -42px -116px;}
+.avatar10 { background-position: -84px -116px;}
+.avatar11 { background-position: -126px -116px;}
+
+.shield {
+    width: 98px;
+    height: 100px;
+    background-image: url('res/shields.png');
+    background-repeat: no-repeat;
+    margin: 0px;
+}
+.shield1 { background-position: 0px 0px; }
+.shield2 { background-position: -98px 0px; }
+.shield3 { background-position: -196px 0px; }
+.shield4 { background-position: -294px 0px; }
+.shield5 { background-position: 0px -100px; }
+.shield6 { background-position: -98px -100px; }
+.shield7 { background-position: -196px -100px; }
+.shield8 { background-position: -294px -100px; }
+.shield9 { background-position: 0px -200px; }
+.shield10 { background-position: -98px -200px; }
+.shield11 { background-position: -196px -200px; }
+.shield12 { background-position: -294px -200px; }
+
+.tcbtn {
+    width: 64px;
+    height: 64px;
+    background-image: url('res/tickcross.png');
+    background-repeat: no-repeat;
+    margin: 0px;
+    padding: 0px;
+    background-color: transparent;
+}
+.btnT1 { background-position: 0px 0px; }
+.btnT0 { background-position: 0px -64px; }
+.btnC1 { background-position: -67px 0px; }
+.btnC0 { background-position: -67px -64px; }
+
+
+#progressBar {
+  margin-bottom:10px;
+  margin-left:18px;
+  width: 300px;
+  height: 14px;
+  background-color: green;
+  border:1px solid darkkhaki;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+#progressBar div {
+  height: 100%;
+  text-align: right;
+  padding: 0 10px;
+  line-height: 14px;
+  width: 30%;
+  background-color: transparent;
+  box-sizing: border-box;
+  background-image: url('res/timer.png');
+  background-repeat: no-repeat;
+}
+
+</style>
+</head>    
+<body onselectstart="return false;" oncontextnmenu="return false;">
+    <div class="slides">
+        <section id="intro" onclick="showSlide('#splash');"></section>
+        <section id="splash" onclick="showSlide('#rules');"></section>
+        <section id="rules">
+            <div id="shieldlist">
+                <div class="glow header" onclick="showSlide('#form');">Protection<hr></div>
+                <div id="list">
+                    <div>
+                    <div class="glow shield_text" id="shield_info">
+                        train and use these protections
+                    </div>
+                    <br clear>
+                    <div class="col shield shield1" onmouseout="newInfo()" onmouseover="newInfo('covered coughing or sneezing')"></div>
+                    <div class="col shield shield2" onmouseout="newInfo()" onmouseover="newInfo('avoid handshake')"></div>
+                    <div class="col shield shield3" onmouseout="newInfo()" onmouseover="newInfo('clean regular use items')"></div>
+                    <div class="col shield shield4" onmouseout="newInfo()" onmouseover="newInfo('stay at home, be safe when outside')"></div>
+                    <br clear>
+                    <div class="col shield shield5" onmouseout="newInfo()" onmouseover="newInfo('regular physical exercise')"></div>
+                    <div class="col shield shield6" onmouseout="newInfo()" onmouseover="newInfo('get covid vaccine')"></div>
+                    <div class="col shield shield12" onmouseout="newInfo()" onmouseover="newInfo('let\'s beat covid')"
+                        onclick="showSlide('#form');"></div>
+                    <div class="col shield shield7" onmouseout="newInfo()" onmouseover="newInfo('avoid crowd')"></div>
+                    <br clear>
+                    <div class="col shield shield8" onmouseout="newInfo()" onmouseover="newInfo('eat healthy food')"></div>
+                    <div class="col shield shield9" onmouseout="newInfo()" onmouseover="newInfo('wash your hands')"></div>
+                    <div class="col shield shield10" onmouseout="newInfo()" onmouseover="newInfo('keep your body clean')"></div>
+                    <div class="col shield shield11" onmouseout="newInfo()" onmouseover="newInfo('get enough good rest')"></div>
+                </div>
+                <!-- div>
+                    <button id="btnstop" class="btn stop_off" 
+                        onmouseover="newStyle(this, 'btn stop_on')"
+                        onmouseout="newStyle(this, 'btn stop_off')"
+                        onclick="mySlider.gotoSlide('#form');">
+                    </button>
+                </div -->
+            </div>
+        </div>
+        </section>
+        <section id="form">
+            <form onsubmit="return false;">
+                <div id="playerform">
+                    <div class="glow header">Players<hr></div>
+                    <div id="entryform">
+                        <div id="status">&nbsp;Please enter players' name and location</div>
+                    <div class="col_left">
+                        <div class="entry">
+                            <div class="col avatar avatar0"></div>
+                            <div class="col_left ">
+                                <input value="player1" type="text" name="nama" autocomplete="off" placeholder="name" onblur="enableGo()"><br>
+                                <select name="origin" onblur="enableGo()">
+                                    <option value="">location</option>
+                                    <option selected>Bangka</option>
+                                    <option>Bogor</option>
+                                    <option>Cikarang</option>
+                                    <option>Daan Mogot</option>
+                                    <option>Holland Village</option>
+                                    <option>Lippo Village</option>
+                                    <option>Lubuk Linggau</option>
+                                    <option>Kupang</option>
+                                    <option>Makassar</option>
+                                    <option>Palembang</option>
+                                    <option>Ranotana</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="entry">
+                            <div class="col avatar avatar1"></div>
+                            <div class="col_left ">
+                                <input value="player2" type="text" name="nama" autocomplete="off" placeholder="name" onblur="enableGo()"><br>
+                                <select name="origin" onblur="enableGo()">
+                                    <option value="">location</option>
+                                    <option>Bangka</option>
+                                    <option>Bogor</option>
+                                    <option selected>Cikarang</option>
+                                    <option>Daan Mogot</option>
+                                    <option>Holland Village</option>
+                                    <option>Lippo Village</option>
+                                    <option>Lubuk Linggau</option>
+                                    <option>Kupang</option>
+                                    <option>Makassar</option>
+                                    <option>Palembang</option>
+                                    <option>Ranotana</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="entry">
+                            <div class="col avatar avatar2"></div>
+                            <div class="col_left ">
+                                <input value="player3" type="text" name="nama" autocomplete="off" placeholder="name" onblur="enableGo()"><br>
+                                <select name="origin" onblur="enableGo()">
+                                    <option value="">location</option>
+                                    <option>Bangka</option>
+                                    <option>Bogor</option>
+                                    <option>Cikarang</option>
+                                    <option>Daan Mogot</option>
+                                    <option selected>Holland Village</option>
+                                    <option>Lippo Village</option>
+                                    <option>Lubuk Linggau</option>
+                                    <option>Kupang</option>
+                                    <option>Makassar</option>
+                                    <option>Palembang</option>
+                                    <option>Ranotana</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="entry">
+                            <div class="col avatar avatar3"></div>
+                            <div class="col_left ">
+                                <input type="text" name="nama" autocomplete="off" placeholder="name" onblur="enableGo()"><br>
+                                <select name="origin" onblur="enableGo()">
+                                    <option value="">location</option>
+                                    <option>Bangka</option>
+                                    <option>Bogor</option>
+                                    <option>Cikarang</option>
+                                    <option>Daan Mogot</option>
+                                    <option>Holland Village</option>
+                                    <option selected>Lippo Village</option>
+                                    <option>Lubuk Linggau</option>
+                                    <option>Kupang</option>
+                                    <option>Makassar</option>
+                                    <option>Palembang</option>
+                                    <option>Ranotana</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>                    
+                    <div class="col_left">
+                        <div class="entry">
+                            <div class="col avatar avatar4"></div>
+                            <div class="col_left">
+                                <input type="text" name="nama" autocomplete="off" placeholder="name" onblur="enableGo()"><br>
+                                <select name="origin" onblur="enableGo()">
+                                    <option value="">location</option>
+                                    <option>Bangka</option>
+                                    <option>Bogor</option>
+                                    <option>Cikarang</option>
+                                    <option>Daan Mogot</option>
+                                    <option>Holland Village</option>
+                                    <option>Lippo Village</option>
+                                    <option>Lubuk Linggau</option>
+                                    <option selected>Kupang</option>
+                                    <option>Makassar</option>
+                                    <option>Palembang</option>
+                                    <option>Ranotana</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="entry">
+                            <div class="col avatar avatar5"></div>
+                            <div class="col_left ">
+                                <input type="text" name="nama" autocomplete="off" placeholder="name" onblur="enableGo()"><br>
+                                <select name="origin" onblur="enableGo()">
+                                    <option value="">location</option>
+                                    <option>Bangka</option>
+                                    <option>Bogor</option>
+                                    <option>Cikarang</option>
+                                    <option>Daan Mogot</option>
+                                    <option>Holland Village</option>
+                                    <option>Lippo Village</option>
+                                    <option>Lubuk Linggau</option>
+                                    <option>Kupang</option>
+                                    <option selected>Makassar</option>
+                                    <option>Palembang</option>
+                                    <option>Ranotana</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="entry">
+                            <div class="col avatar avatar6"></div>
+                                <div class="col_left ">
+                                <input type="text" name="nama" autocomplete="off" placeholder="name" onblur="enableGo()"><br>
+                                <select name="origin" onblur="enableGo()">
+                                    <option value="">location</option>
+                                    <option>Bangka</option>
+                                    <option>Bogor</option>
+                                    <option>Cikarang</option>
+                                    <option>Daan Mogot</option>
+                                    <option>Holland Village</option>
+                                    <option>Lippo Village</option>
+                                    <option>Lubuk Linggau</option>
+                                    <option>Kupang</option>
+                                    <option>Makassar</option>
+                                    <option selected>Palembang</option>
+                                    <option>Ranotana</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="entry">
+                            <div class="col avatar avatar7"></div>
+                                <div class="col_left ">
+                                <input type="text" name="nama" autocomplete="off" placeholder="name" onblur="enableGo()"><br>
+                                <select name="origin" onblur="enableGo()">
+                                <option value="">location</option>
+                                <option>Bangka</option>
+                                <option>Bogor</option>
+                                <option>Cikarang</option>
+                                <option>Daan Mogot</option>
+                                <option>Holland Village</option>
+                                <option>Lippo Village</option>
+                                <option>Lubuk Linggau</option>
+                                <option>Kupang</option>
+                                <option>Makassar</option>
+                                <option>Palembang</option>
+                                <option selected>Ranotana</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div>
+                        <button id="btnstop" class="btn stop_off" 
+                            onmouseover="newStyle(this, 'btn stop_on')"
+                            onmouseout="newStyle(this, 'btn stop_off')"
+                            onclick="startGame()">
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </section>
+        <section id="game"></section>
+        <section id="quiz">
+            <div id="quizpanel">
+                <div id="cross" class="col tcbtn btnC0"
+                    onmouseover="newStyle(this, 'col tcbtn btnC1')"
+                    onmouseout="newStyle(this, 'col tcbtn btnC0')"
+                    onclick="quizNOK();;">
+                </div>
+                <div id="tick" class="col tcbtn btnT0"
+                    onmouseover="newStyle(this, 'col tcbtn btnT1')"
+                    onmouseout="newStyle(this, 'col tcbtn btnT0')"
+                    onclick="quizOK();">
+                </div>
+                <div id="progressBar"><div class="bar"></div></div>
+            </div>
+            <div id="qcontainer">
+                <iframe id="qurl" src="https://docs.google.com/presentation/d/e/2PACX-1vQ5f8fhzrxR0EjPJWdB6OU1VTUTtHd0lvk8zs8GBrvW7xIwi1kDCNKYAIxW5YgQU4uWVIXujfkEM78n/embed?start=false&loop=false&delayms=3000" frameborder="0" allowfullscreen="false" mozallowfullscreen="false" webkitallowfullscreen="false"></iframe>            
+                <div id="qbanner">(C) 2021 - UPH BIOTECH</div>
+            </div>
+        </section>
+      </div>  
+      <script>
+        var mySlider = slider('.slides');
+        function showSlide(n) {mySlider.gotoSlide(n);}
+
+        setTimeout(function() {
+            showSlide('#intro');
+            //setTimeout(function() {
+            //    showSlide('#game');
+            //}, 1000);
+        }, 1000);
+
+      </script>
+<script src="main.js"></script>
+</body>
+</html>

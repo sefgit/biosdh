@@ -1,0 +1,90 @@
+{
+  "frames": {
+    "covid1": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 65,
+        "h": 61
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 65,
+        "h": 61
+      },
+      "sourceSize": {
+        "w": 65,
+        "h": 61
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "covid2": {
+      "frame": {
+        "x": 65,
+        "y": 0,
+        "w": 65,
+        "h": 61
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 65,
+        "h": 61
+      },
+      "sourceSize": {
+        "w": 65,
+        "h": 61
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "covid3": {
+      "frame": {
+        "x": 130,
+        "y": 0,
+        "w": 65,
+        "h": 61
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 65,
+        "h": 61
+      },
+      "sourceSize": {
+        "w": 65,
+        "h": 61
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    }
+  },
+  "animations": {
+    "covid": ["covid1","covid2","covid3"]
+  },
+  "meta": {
+    "app": "http://free-tex-packer.com",
+    "version": "0.6.6",
+    "image": "covid.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 195,
+      "h": 61
+    },
+    "scale": 1
+  }
+}
