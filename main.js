@@ -459,9 +459,14 @@ function showQuiz()
 {
     var e = document.getElementById('qurl');
     var url = getUrls();
+    //var surl = "https://docs.google.com/presentation/d/e/2PACX-1vQ5f8fhzrxR0EjPJWdB6OU1VTUTtHd0lvk8zs8GBrvW7xIwi1kDCNKYAIxW5YgQU4uWVIXujfkEM78n/embed?start=false&loop=false&delayms=3000";            
+    var intros = [
+        "https://docs.google.com/presentation/d/e/2PACX-1vQVNZqPHj6lYEfLlXDkUftHw5LQ9nRf7Jmslzmife9zkB_w95Y43qM_16F62wm8Sl9GOizOwIpB_EMi/embed?start=false&loop=false&delayms=3000",
+        "https://docs.google.com/presentation/d/e/2PACX-1vQ5f8fhzrxR0EjPJWdB6OU1VTUTtHd0lvk8zs8GBrvW7xIwi1kDCNKYAIxW5YgQU4uWVIXujfkEM78n/embed?start=false&loop=false&delayms=3000"
+        ];
+    var x = Math.round(Math.random()*intros.length);
+    if (e) e.src = intros[x];
     showSlide('#quiz');    
-    var surl = "https://docs.google.com/presentation/d/e/2PACX-1vQ5f8fhzrxR0EjPJWdB6OU1VTUTtHd0lvk8zs8GBrvW7xIwi1kDCNKYAIxW5YgQU4uWVIXujfkEM78n/embed?start=false&loop=false&delayms=3000";            
-    if (e) e.src = surl;
     setTimeout(function() {
         if (e) e.src = url;
     },3000);        
