@@ -304,22 +304,26 @@ input, select {
 
 
 #progressBar {
-  margin-bottom:10px;
-  margin-left:18px;
   width: 300px;
   height: 14px;
-  background-color: green;
+  background-color: rgb(124, 209, 124);
   border:1px solid darkkhaki;
   border-radius: 5px;
   display: inline-block;
 }
 
-#progressBar div {
+#bar {
+    margin-bottom:18px;
+    width:0px;
+    height:100%;
+}
+
+#xbar {
   height: 100%;
   text-align: right;
   padding: 0 10px;
   line-height: 14px;
-  width: 30%;
+  width: 100%;
   background-color: transparent;
   box-sizing: border-box;
   background-image: url('res/timer.png');
@@ -330,8 +334,8 @@ input, select {
 </head>    
 <body onselectstart="return false;" oncontextnmenu="return false;">
     <div class="slides">
-        <section id="intro" onclick="showSlide('#splash');"></section>
-        <section id="splash" onclick="showSlide('#rules');"></section>
+        <section id="intro" xonclick="showSlide('#splash');"></section>
+        <section id="splash" xonclick="showSlide('#rules');"></section>
         <section id="rules">
             <div id="shieldlist">
                 <div class="glow header" onclick="showSlide('#form');">Protection<hr></div>
@@ -377,7 +381,7 @@ input, select {
                         <div class="entry">
                             <div class="col avatar avatar0"></div>
                             <div class="col_left ">
-                                <input type="text" name="nama" autocomplete="off" placeholder="name" onblur="enableGo()"><br>
+                                <input value="budi" type="text" name="nama" autocomplete="off" placeholder="name" onblur="enableGo()"><br>
                                 <select name="origin" onblur="enableGo()">
                                     <option value="">location</option>
                                     <option selected>Bangka</option>
@@ -397,7 +401,7 @@ input, select {
                         <div class="entry">
                             <div class="col avatar avatar1"></div>
                             <div class="col_left ">
-                                <input type="text" name="nama" autocomplete="off" placeholder="name" onblur="enableGo()"><br>
+                                <input value="tuti" type="text" name="nama" autocomplete="off" placeholder="name" onblur="enableGo()"><br>
                                 <select name="origin" onblur="enableGo()">
                                     <option value="">location</option>
                                     <option>Bangka</option>
@@ -417,7 +421,7 @@ input, select {
                         <div class="entry">
                             <div class="col avatar avatar2"></div>
                             <div class="col_left ">
-                                <input type="text" name="nama" autocomplete="off" placeholder="name" onblur="enableGo()"><br>
+                                <input value="unyil" type="text" name="nama" autocomplete="off" placeholder="name" onblur="enableGo()"><br>
                                 <select name="origin" onblur="enableGo()">
                                     <option value="">location</option>
                                     <option>Bangka</option>
@@ -561,7 +565,7 @@ input, select {
                     onmouseout="newStyle(this, 'col tcbtn btnT0')"
                     onclick="quizOK();">
                 </div>
-                <div id="progressBar"><div class="bar"></div></div>
+                <div id="progressBar"><img id="bar" src="res/timer.png"></div>
             </div>
             <div id="qcontainer">
 <!-- https://docs.google.com/presentation/d/e/2PACX-1vQ5f8fhzrxR0EjPJWdB6OU1VTUTtHd0lvk8zs8GBrvW7xIwi1kDCNKYAIxW5YgQU4uWVIXujfkEM78n/embed?start=false&loop=false&delayms=3000
@@ -575,15 +579,13 @@ input, select {
         var mySlider = slider('.slides');
         function showSlide(n) {mySlider.gotoSlide(n);}
 
+        showSlide('#intro');
         setTimeout(function() {
-            showSlide('#intro');
+            showSlide('#splash');
             setTimeout(function() {
-               showSlide('#splash');
-               setTimeout(function() {
-                  showSlide('#rules');
-               }, 5000);
+                showSlide('#rules');
             }, 5000);
-        }, 5000);
+        }, 3000);
       </script>
 <script src="main.js"></script>
 </body>
