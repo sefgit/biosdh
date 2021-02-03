@@ -325,7 +325,6 @@ function homePosition(delta)
         delay = 30;
         var city = seatOrigins[idx];
         curCities[idx] = city;
-        console.log(city);
         counter += 1;
         //p.y = 50;
         p.x = cities[city].x;
@@ -394,7 +393,6 @@ function randomCity()
         return;
     curPlayer = Math.floor(Math.random() * seats.length);
     //nextSteps = Math.floor(Math.random() * 4 + 1);
-    console.log("currnet: ", curPlayer);
     setTimeout(function() {
         gotoNextCity();
     },1000);
@@ -403,6 +401,8 @@ function randomCity()
 function quizOK()
 {
     showSlide('#game');
+    var e = document.getElementById('qurl');
+    if (e) e.src = 'about:blank';
     setTimeout(function() {
         gotoNextCity();
     },1000);    
@@ -412,6 +412,8 @@ function quizNOK()
 {
     showSlide('#game');
     nextSteps = 0;
+    var e = document.getElementById('qurl');
+    if (e) e.src = 'about:blank';
     setTimeout(function() {
         //gotoNextCity();
         stayAtHomeBtn.interactive = true;
@@ -457,7 +459,6 @@ function showQuiz()
 {
     var e = document.getElementById('qurl');
     var url = getUrls();
-    console.log(url);
     showSlide('#quiz');    
     var surl = "https://docs.google.com/presentation/d/e/2PACX-1vQ5f8fhzrxR0EjPJWdB6OU1VTUTtHd0lvk8zs8GBrvW7xIwi1kDCNKYAIxW5YgQU4uWVIXujfkEM78n/embed?start=false&loop=false&delayms=3000";            
     if (e) e.src = surl;
@@ -642,7 +643,6 @@ function setup()
         //var p2 = new PIXI.Sprite(sheet.textures[t]);
         mavatars[t] = p;
         //players[t] = p2;
-        console.log('SEAT: ', t);
         //seats.push(t);
         p.y = 100;
         p.x = n * 50 + 40;
@@ -799,8 +799,6 @@ function startGame()
         seatNames.push(nama);
         seatOrigins.push(origin);
     }
-    console.log("SEATS:");
-    console.log(seats);
     if (seats.length < 1)
         console.log('*** no players');
     else
