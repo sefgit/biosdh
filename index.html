@@ -3,6 +3,7 @@
 <head>
 <title>ATCG - UPH Biotech</title>
 <meta name="viewport" content="width=640, initial-scale=1, user-scalable=yes">
+<script src="res/howler.core.min.js"></script>
 <script src="res/howler.min.js"></script>
 <script src="res/pixi.min.js"></script>
 <script src="res/slider.js"></script>
@@ -126,6 +127,17 @@ input, select {
     background-image: url('res/intro.png');
     background-repeat: no-repeat;
     background-position: center;
+}
+#intromsg {
+    position:fixed;
+    top: 50%;
+    left: 50%;
+    padding-top: 150px;
+    margin-left: -210px;
+    opacity: 0.5;
+    font-size: 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    color:white;
 }
 #splash {
     background-color: #000000;
@@ -306,7 +318,7 @@ input, select {
 #progressBar {
   width: 300px;
   height: 14px;
-  background-color: rgb(124, 209, 124);
+  background-color: darkgreen;
   border:1px solid darkkhaki;
   border-radius: 5px;
   display: inline-block;
@@ -318,23 +330,13 @@ input, select {
     height:100%;
 }
 
-#xbar {
-  height: 100%;
-  text-align: right;
-  padding: 0 10px;
-  line-height: 14px;
-  width: 100%;
-  background-color: transparent;
-  box-sizing: border-box;
-  background-image: url('res/timer.png');
-  background-repeat: no-repeat;
-}
-
 </style>
 </head>    
 <body onselectstart="return false;" oncontextnmenu="return false;">
     <div class="slides">
-        <section id="intro" xonclick="showSlide('#splash');"></section>
+        <section id="intro" onclick="startToPlay();">
+                <div id="intromsg">please CLICK HERE to start our journey ...</div>
+        </section>
         <section id="splash" xonclick="showSlide('#rules');"></section>
         <section id="rules">
             <div id="shieldlist">
@@ -575,18 +577,6 @@ input, select {
             </div>
         </section>
       </div>  
-      <script>
-        var mySlider = slider('.slides');
-        function showSlide(n) {mySlider.gotoSlide(n);}
-
-        showSlide('#intro');
-        setTimeout(function() {
-            showSlide('#splash');
-            setTimeout(function() {
-                showSlide('#rules');
-            }, 5000);
-        }, 3000);
-      </script>
 <script src="main.js"></script>
 </body>
 </html>

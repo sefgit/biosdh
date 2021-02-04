@@ -26,6 +26,11 @@ var intros = [
 
 document.oncontextmenu = new Function("return false;");
 var default_shield_info='save lives, save your loved ones';
+var mySlider;
+var bgMusic;
+function showSlide(n) {
+    mySlider.gotoSlide(n);
+}
 
 function newInfo(info) {
     var e = document.getElementById('shield_info');
@@ -287,6 +292,10 @@ function stayAtHome()
 
 function doTurn()
 {
+    if (curPlayer < 0)
+        return;
+    if (curPlayer >= seats.length)
+        return;
     var idx = seats[curPlayer];
     var px;
     for(var p in ranks)
@@ -320,7 +329,7 @@ function nextPlayer()
     if (curPlayer < 0)
         curPlayer = 0;
     else
-        curPlayer++;
+        curPlayer++;        
     if (curPlayer >= seats.length)
         curPlayer = 0;
     if (counters[curPlayer] < 11)
@@ -364,8 +373,6 @@ function homePosition(delta)
             },1000);
         }
     }
-    //p.scale = 0.5;
-    //p.visible = true;
     delay -= delta;
 }
 
@@ -428,7 +435,7 @@ function randomCity()
 
 var barTimerId = 0;
 var barTimerCounter = 0;
-function resetTiimer() 
+function resetTimer() 
 {
     if (barTimerId > 0)
         clearInterval(barTimerId);
@@ -437,7 +444,7 @@ function resetTiimer()
 
 function quizOK()
 {
-    resetTiimer();
+    resetTimer();
     showSlide('#game');
     var e = document.getElementById('qurl');
     if (e) e.src = 'about:blank';
@@ -448,7 +455,7 @@ function quizOK()
 
 function quizNOK()
 {
-    resetTiimer();
+    resetTimer();
     showSlide('#game');
     nextSteps = 0;
     var e = document.getElementById('qurl');
@@ -482,7 +489,7 @@ function updateQuizTimer()
 
 function resetQuizTimer()
 {
-    resetTiimer();
+    resetTimer();
     bar = document.getElementById('bar');
     if (bar) {
         bar.style.width = "0";
@@ -597,10 +604,10 @@ function rollATCG()
         return;
     if (nextLocation != '')
         return;
-    nextState = rollingATCG;    
     covidLoop.play();
     goBtn.interactive = false;
     goBtn.visible = false;
+    nextState = rollingATCG;    
     resetQuizTimer();
 }
 
@@ -780,7 +787,56 @@ function setup()
     app.ticker.add(ticker);
 }
 
+function audioEnabled()
+{
+
+}
+
+function requestPermissions() 
+{
+    // Check for Geolocation API permissions
+    navigator.permissions.query({name:'sound'})
+    .then(function(permissionStatus) {
+        console.log('sound permission state is ', permissionStatus.state);
+
+        permissionStatus.onchange = function() {
+        console.log('sound  permission state has changed to ', this.state);
+        };
+    });
+
+/*
+    // Prefer camera resolution nearest to 1280x720.
+    var constraints = { audio: true};
+
+    navigator.mediaDevices.getUserMedia(constraints)
+    .then(function(mediaStream) {
+        audioEnabled();
+    })
+    .catch(function(err) { console.log(err.name + ": " + err.message); });     
+*/    
+}
+
+var introTimerID = 0;
+var introMsgDiv;
+var introOpacity = 0;
+function introMsg()
+{
+    introOpacity += 0.1;
+    introMsgDiv.style.opacity = introOpacity;
+    if (introOpacity >= 1.0)
+    {
+        if (introTimerID > 0)
+            clearInterval(introTimerID);
+        introTimerID = 0;
+    }
+}
+
+
 function init()  {
+
+    //requestPermissions();
+    introMsgDiv = document.getElementById('intromsg');
+    introTimerID = setInterval(introMsg, 200);
     app.loader    
     .add("sdhmap", "res/sdhmap.png")
     .add("bgmap", "res/bgmap.png")
@@ -797,15 +853,8 @@ function init()  {
     .add("mavatars", "res/mavatar.json")
     .load(setup);
 
-    /*
-    setTimeout(function() {
-        mySlider.gotoSlide('#game');
-        setTimeout(function() {
-            mySlider.gotoSlide('#end');
-        }, 3000);    
-    }, 3000);
-    */
-   startQuizTimer();
+   mySlider = slider('.slides');
+   showSlide('#intro');
 }
 
 document.onload = init();
@@ -860,8 +909,57 @@ function startGame()
         console.log('*** no players');
     else
     {
-        nextState = shufflePlayers;
         showSlide('#game');
+        nextState = shufflePlayers;
     }
 }
 
+var idStartMusic=0;
+var idBgMusic=0;
+var started = false;
+function startToPlay()
+{
+    if (started)
+        return;
+    started = true;
+    if (introTimerID > 0)
+        clearInterval(introTimerID);
+    introTimerID = 0;
+    introMsgDiv.innerHTML = '<i>p r e s e n t s</i>';
+    introMsgDiv.style.marginLeft =  "-76px";
+
+    bgMusic = new Howl({
+        src: ['res/fx/mars-SDH.mp3'],
+        sprite: {
+            full: [0, 18100, false],
+            bg: [7300, 17000, true]
+          },        
+        html5: true,
+        buffer:false,
+        autoplay:false,
+        preload:true,
+        loop:false,
+        onload: function() {
+            console.log("* loaded");
+        },
+        onend: function(id) {
+            console.log("end:", id);
+            if (id == idStartMusic)
+            {
+                bgMusic.stop();
+            }
+            if (idBgMusic == 0)
+            {
+                idBgMusic = bgMusic.play('bg');            
+            }
+        }
+    });
+    idStartMusic = bgMusic.play('full');
+    setTimeout(function() {
+        showSlide('#splash');
+        bgMusic.fade(1.0, 0.05,3000);
+        setTimeout(function() {
+            showSlide('#rules');
+        }, 5000);
+    }, 5000);
+ }
