@@ -9,7 +9,7 @@ var slider = function (sliderElement) {
   var init = function () {
 
     document.body.classList.add('slider__body');
-
+/*
     // control scrolling
     whatWheel = 'onwheel' in document.createElement('div') ? 'wheel' : document.onmousewheel !== undefined ? 'mousewheel' : 'DOMMouseScroll';
     window.addEventListener(whatWheel, function (e) {
@@ -20,7 +20,7 @@ var slider = function (sliderElement) {
         changeSlide(1);
       }
     });
-
+*/
     // page change animation is done
     detectChangeEnd() && document.querySelector(sliderElement).addEventListener(detectChangeEnd(), function () {
       if (isChanging) {

@@ -1,5 +1,36 @@
+const barCounter = 30; // Quiz timer in seconds
+var urls = [
+    "https://docs.google.com/presentation/d/e/2PACX-1vTGdBLuSIuIV73slEqnihNi66yMPpAJJSzJ_oPKXfS4TPd568lo2_clWvnqtArJvChgpGoxwCpJz2fr/pub?start=false&loop=false&delayms=3000",
+    "https://docs.google.com/presentation/d/e/2PACX-1vS2IFKjooQqyw5YmFLF1MYE9pT_KOsAtS5pCDCVK8AZ9fGgg-Pu9KPNAJuCxKZVUh0xbIHDfOexvBSk/pub?start=false&loop=false&delayms=3000",    
+    "https://docs.google.com/presentation/d/e/2PACX-1vR9VSrrmLnaO0-1MxGARXbm7Tt1a0CGMw4pJ1G7rrzHpJKHCa9ECZukwoQWz-RCwq51Ft6aPv3H9RaS/pub?start=false&loop=false&delayms=3000",  
+    "https://docs.google.com/presentation/d/e/2PACX-1vQirgZFRex9uobvbxRdlJ6KTbdhUkeZBhOGCqOAiQgn5gHkGqYtYqrzIaUGhXR3H2UploMtuUTChldq/pub?start=false&loop=false&delayms=3000",
+    "https://docs.google.com/presentation/d/e/2PACX-1vRSyQW8NEJ0yx1xN43s2YOVWyFAC58yaHH9OuClAT-Ol6Dt21d3-46T4eTlBuRPzSnmEXQn2zyiGF5i/pub?start=false&loop=false&delayms=3000",    
+    "https://docs.google.com/presentation/d/e/2PACX-1vR8_WKAa7G-E8OZ23j3Ndt5LWjVzVa-ahhYH6nwnzQn4UdFYCgu5iyZE4ttJQZo36RGwgyVpWYkrHMm/pub?start=false&loop=false&delayms=3000",    
+    "https://docs.google.com/presentation/d/e/2PACX-1vQkgvpAgwUsOyZG52AJgA4Sr6tPKIKL04OTv4fTd64ORjWdR0v_PsIhIvDG1aOn6sDdjYA5B5hkOKoM/pub?start=false&loop=false&delayms=3000",    
+    "https://docs.google.com/presentation/d/e/2PACX-1vSa1oXb9QF94pEIbDOZvhBufrxMWt7M0Ipn8F2VxasS61qn8hG716YZgCRmB2_UuynFZEgnyxsoZR_l/pub?start=false&loop=false&delayms=3000",    
+    "https://docs.google.com/presentation/d/e/2PACX-1vSclI-T5uHs-ieQRuLyetRn0yzCwgRMPksu9X_a02WfYZdhG8e44ZEcB6XEYbpvw9MfOzyXCMNnToIy/pub?start=false&loop=false&delayms=3000",    
+    "https://docs.google.com/presentation/d/e/2PACX-1vQDgNN_ZzHtzuQE4IEU-ct0J9nThm5KSahA6k_YJv3bOrdRycnDswGHDLWXvcoAeDLrRkevyvLS78kT/pub?start=false&loop=false&delayms=3000",    
+    "https://docs.google.com/presentation/d/e/2PACX-1vRf0thtm89v8p_CS_7n-_GI8bPtUw0sGufkbAV3vzi-_krAiOk_8nY_Aa-wDb88o46yZ1BD_ZdQhKru/pub?start=false&loop=false&delayms=3000",    
+    "https://docs.google.com/presentation/d/e/2PACX-1vTu3qQjnacAIqqJ-9WanHxrqxcyCJvkWO_901KXKCIBdNHiW0toENZbsNPU4Ct5LU7u_OHbIiCKDmGs/pub?start=false&loop=false&delayms=3000",    
+    "https://docs.google.com/presentation/d/e/2PACX-1vR8n7sCdsqdilAoumAvs6UWejPaNhqmy37zcuoYr2uDQagiKhJjciza_SkGdURMXO8OtsF_qWbF3IhZ/pub?start=false&loop=false&delayms=3000",    
+    "https://docs.google.com/presentation/d/e/2PACX-1vSeEvS3VKdnIcXzLVCzaLo3Sjto-VHpHzn2qJC2cFKjED8Cvr4XMHF9I7xo342IFxF4jbmx1clxa6uB/pub?start=false&loop=false&delayms=3000",    
+    "https://docs.google.com/presentation/d/e/2PACX-1vQLaVDpZtiTIfOqJ8saftVPNfWLrZnBUwLxuwJyL_6umugvNLk9ZZmB6J40-y2bVP7G9yjDPQf5azB6/pub?start=false&loop=false&delayms=3000",        
+];
+
+
+var intros = [
+    "https://docs.google.com/presentation/d/e/2PACX-1vQVNZqPHj6lYEfLlXDkUftHw5LQ9nRf7Jmslzmife9zkB_w95Y43qM_16F62wm8Sl9GOizOwIpB_EMi/embed?start=false&loop=false&delayms=3000",
+    "https://docs.google.com/presentation/d/e/2PACX-1vQ5f8fhzrxR0EjPJWdB6OU1VTUTtHd0lvk8zs8GBrvW7xIwi1kDCNKYAIxW5YgQU4uWVIXujfkEM78n/embed?start=false&loop=false&delayms=3000"
+    ];
+
+
 document.oncontextmenu = new Function("return false;");
 var default_shield_info='save lives, save your loved ones';
+var mySlider;
+var bgMusic;
+function showSlide(n) {
+    mySlider.gotoSlide(n);
+}
 
 function newInfo(info) {
     var e = document.getElementById('shield_info');
@@ -48,6 +79,7 @@ const xOffsets = [-10,-10, 0,  0,10,10,10,-10];
 const yOffsets = [ 10,-10,10,-10,-5, 5, 0, 0];
 const xDice = [30,104,175,51,112,178];
 const yDice = [64,38,21,120,95, 75];
+var bar;
 var playerName;
 var curPlayer = -1;
 const mavatars = {};
@@ -260,6 +292,10 @@ function stayAtHome()
 
 function doTurn()
 {
+    if (curPlayer < 0)
+        return;
+    if (curPlayer >= seats.length)
+        return;
     var idx = seats[curPlayer];
     var px;
     for(var p in ranks)
@@ -293,7 +329,7 @@ function nextPlayer()
     if (curPlayer < 0)
         curPlayer = 0;
     else
-        curPlayer++;
+        curPlayer++;        
     if (curPlayer >= seats.length)
         curPlayer = 0;
     if (counters[curPlayer] < 11)
@@ -325,7 +361,6 @@ function homePosition(delta)
         delay = 30;
         var city = seatOrigins[idx];
         curCities[idx] = city;
-        console.log(city);
         counter += 1;
         //p.y = 50;
         p.x = cities[city].x;
@@ -338,8 +373,6 @@ function homePosition(delta)
             },1000);
         }
     }
-    //p.scale = 0.5;
-    //p.visible = true;
     delay -= delta;
 }
 
@@ -394,15 +427,27 @@ function randomCity()
         return;
     curPlayer = Math.floor(Math.random() * seats.length);
     //nextSteps = Math.floor(Math.random() * 4 + 1);
-    console.log("currnet: ", curPlayer);
     setTimeout(function() {
         gotoNextCity();
     },1000);
 }
 
+
+var barTimerId = 0;
+var barTimerCounter = 0;
+function resetTimer() 
+{
+    if (barTimerId > 0)
+        clearInterval(barTimerId);
+    barTimerId = 0;
+}
+
 function quizOK()
 {
+    resetTimer();
     showSlide('#game');
+    var e = document.getElementById('qurl');
+    if (e) e.src = 'about:blank';
     setTimeout(function() {
         gotoNextCity();
     },1000);    
@@ -410,8 +455,11 @@ function quizOK()
 
 function quizNOK()
 {
+    resetTimer();
     showSlide('#game');
     nextSteps = 0;
+    var e = document.getElementById('qurl');
+    if (e) e.src = 'about:blank';
     setTimeout(function() {
         //gotoNextCity();
         stayAtHomeBtn.interactive = true;
@@ -422,33 +470,47 @@ function quizNOK()
     },1000);        
 }
 
+function updateQuizTimer()
+{
+    if (barTimerCounter > 0)
+    {
+        barTimerCounter--;
+    }
+    if (bar) 
+    {
+        var n = 100 - Math.round(barTimerCounter  * 100 / barCounter);
+        bar.style.width = n + "%";
+    }
+    if (barTimerCounter <= 0)
+    {
+        quizNOK();
+    }
+}
+
+function resetQuizTimer()
+{
+    resetTimer();
+    bar = document.getElementById('bar');
+    if (bar) {
+        bar.style.width = "0";
+        //bar.setAttribute("width","0%");
+    }
+}
+
+function startQuizTimer()
+{
+    resetQuizTimer();
+    barTimerCounter = barCounter;
+    barTimerId = setInterval(updateQuizTimer, 1000);
+}
 
 ///
 ///
-
-var urls = [
-    "https://docs.google.com/presentation/d/e/2PACX-1vTGdBLuSIuIV73slEqnihNi66yMPpAJJSzJ_oPKXfS4TPd568lo2_clWvnqtArJvChgpGoxwCpJz2fr/pub?start=false&loop=false&delayms=3000",
-    "https://docs.google.com/presentation/d/e/2PACX-1vS2IFKjooQqyw5YmFLF1MYE9pT_KOsAtS5pCDCVK8AZ9fGgg-Pu9KPNAJuCxKZVUh0xbIHDfOexvBSk/pub?start=false&loop=false&delayms=3000",    
-    "https://docs.google.com/presentation/d/e/2PACX-1vR9VSrrmLnaO0-1MxGARXbm7Tt1a0CGMw4pJ1G7rrzHpJKHCa9ECZukwoQWz-RCwq51Ft6aPv3H9RaS/pub?start=false&loop=false&delayms=3000",  
-    "https://docs.google.com/presentation/d/e/2PACX-1vQirgZFRex9uobvbxRdlJ6KTbdhUkeZBhOGCqOAiQgn5gHkGqYtYqrzIaUGhXR3H2UploMtuUTChldq/pub?start=false&loop=false&delayms=3000",
-    "https://docs.google.com/presentation/d/e/2PACX-1vRSyQW8NEJ0yx1xN43s2YOVWyFAC58yaHH9OuClAT-Ol6Dt21d3-46T4eTlBuRPzSnmEXQn2zyiGF5i/pub?start=false&loop=false&delayms=3000",    
-    "https://docs.google.com/presentation/d/e/2PACX-1vR8_WKAa7G-E8OZ23j3Ndt5LWjVzVa-ahhYH6nwnzQn4UdFYCgu5iyZE4ttJQZo36RGwgyVpWYkrHMm/pub?start=false&loop=false&delayms=3000",    
-    "https://docs.google.com/presentation/d/e/2PACX-1vQkgvpAgwUsOyZG52AJgA4Sr6tPKIKL04OTv4fTd64ORjWdR0v_PsIhIvDG1aOn6sDdjYA5B5hkOKoM/pub?start=false&loop=false&delayms=3000",    
-    "https://docs.google.com/presentation/d/e/2PACX-1vSa1oXb9QF94pEIbDOZvhBufrxMWt7M0Ipn8F2VxasS61qn8hG716YZgCRmB2_UuynFZEgnyxsoZR_l/pub?start=false&loop=false&delayms=3000",    
-    "https://docs.google.com/presentation/d/e/2PACX-1vSclI-T5uHs-ieQRuLyetRn0yzCwgRMPksu9X_a02WfYZdhG8e44ZEcB6XEYbpvw9MfOzyXCMNnToIy/pub?start=false&loop=false&delayms=3000",    
-    "https://docs.google.com/presentation/d/e/2PACX-1vQDgNN_ZzHtzuQE4IEU-ct0J9nThm5KSahA6k_YJv3bOrdRycnDswGHDLWXvcoAeDLrRkevyvLS78kT/pub?start=false&loop=false&delayms=3000",    
-    "https://docs.google.com/presentation/d/e/2PACX-1vRf0thtm89v8p_CS_7n-_GI8bPtUw0sGufkbAV3vzi-_krAiOk_8nY_Aa-wDb88o46yZ1BD_ZdQhKru/pub?start=false&loop=false&delayms=3000",    
-    "https://docs.google.com/presentation/d/e/2PACX-1vTu3qQjnacAIqqJ-9WanHxrqxcyCJvkWO_901KXKCIBdNHiW0toENZbsNPU4Ct5LU7u_OHbIiCKDmGs/pub?start=false&loop=false&delayms=3000",    
-    "https://docs.google.com/presentation/d/e/2PACX-1vR8n7sCdsqdilAoumAvs6UWejPaNhqmy37zcuoYr2uDQagiKhJjciza_SkGdURMXO8OtsF_qWbF3IhZ/pub?start=false&loop=false&delayms=3000",    
-    "https://docs.google.com/presentation/d/e/2PACX-1vSeEvS3VKdnIcXzLVCzaLo3Sjto-VHpHzn2qJC2cFKjED8Cvr4XMHF9I7xo342IFxF4jbmx1clxa6uB/pub?start=false&loop=false&delayms=3000",    
-    "https://docs.google.com/presentation/d/e/2PACX-1vQLaVDpZtiTIfOqJ8saftVPNfWLrZnBUwLxuwJyL_6umugvNLk9ZZmB6J40-y2bVP7G9yjDPQf5azB6/pub?start=false&loop=false&delayms=3000",        
-];
-
-
 function getUrls() {
     var n = urls.length;
     var x = Math.round(Math.random()* n);
     var s = urls[x];
+    urls.splice(x, 1);
     var pos = s.lastIndexOf('/');;
     return s.substr(0,pos) + '/embed?start=false&loop=false&delayms=2000';
 }
@@ -457,12 +519,12 @@ function showQuiz()
 {
     var e = document.getElementById('qurl');
     var url = getUrls();
-    console.log(url);
+    var x = Math.round(Math.random()*intros.length);
     showSlide('#quiz');    
-    var surl = "https://docs.google.com/presentation/d/e/2PACX-1vQ5f8fhzrxR0EjPJWdB6OU1VTUTtHd0lvk8zs8GBrvW7xIwi1kDCNKYAIxW5YgQU4uWVIXujfkEM78n/embed?start=false&loop=false&delayms=3000";            
-    if (e) e.src = surl;
+    if (e) e.src = intros[x];
     setTimeout(function() {
         if (e) e.src = url;
+        startQuizTimer();
     },3000);        
 }
 
@@ -520,6 +582,7 @@ function rollingATCG(delta)
         if (rollingCounter < 0) {
             rollingCounter = 10;
             nextState = idle;
+            covidLoop.stop();
             setTimeout(function() {
                 doATCG(lastDice);
             },2000);
@@ -541,10 +604,11 @@ function rollATCG()
         return;
     if (nextLocation != '')
         return;
-    nextState = rollingATCG;    
     covidLoop.play();
     goBtn.interactive = false;
     goBtn.visible = false;
+    nextState = rollingATCG;    
+    resetQuizTimer();
 }
 
 function goBtnDown() 
@@ -642,7 +706,6 @@ function setup()
         //var p2 = new PIXI.Sprite(sheet.textures[t]);
         mavatars[t] = p;
         //players[t] = p2;
-        console.log('SEAT: ', t);
         //seats.push(t);
         p.y = 100;
         p.x = n * 50 + 40;
@@ -706,7 +769,7 @@ function setup()
 
 
     var p = new PIXI.Sprite(shields[3].texture);
-    p.y = 130;
+    p.y = 140;
     p.x = 260;
     p.visible = false;
     p.on("mousedown", stayAtHome);
@@ -724,7 +787,56 @@ function setup()
     app.ticker.add(ticker);
 }
 
+function audioEnabled()
+{
+
+}
+
+function requestPermissions() 
+{
+    // Check for Geolocation API permissions
+    navigator.permissions.query({name:'sound'})
+    .then(function(permissionStatus) {
+        console.log('sound permission state is ', permissionStatus.state);
+
+        permissionStatus.onchange = function() {
+        console.log('sound  permission state has changed to ', this.state);
+        };
+    });
+
+/*
+    // Prefer camera resolution nearest to 1280x720.
+    var constraints = { audio: true};
+
+    navigator.mediaDevices.getUserMedia(constraints)
+    .then(function(mediaStream) {
+        audioEnabled();
+    })
+    .catch(function(err) { console.log(err.name + ": " + err.message); });     
+*/    
+}
+
+var introTimerID = 0;
+var introMsgDiv;
+var introOpacity = 0;
+function introMsg()
+{
+    introOpacity += 0.1;
+    introMsgDiv.style.opacity = introOpacity;
+    if (introOpacity >= 1.0)
+    {
+        if (introTimerID > 0)
+            clearInterval(introTimerID);
+        introTimerID = 0;
+    }
+}
+
+
 function init()  {
+
+    //requestPermissions();
+    introMsgDiv = document.getElementById('intromsg');
+    introTimerID = setInterval(introMsg, 200);
     app.loader    
     .add("sdhmap", "res/sdhmap.png")
     .add("bgmap", "res/bgmap.png")
@@ -741,14 +853,8 @@ function init()  {
     .add("mavatars", "res/mavatar.json")
     .load(setup);
 
-    /*
-    setTimeout(function() {
-        mySlider.gotoSlide('#game');
-        setTimeout(function() {
-            mySlider.gotoSlide('#end');
-        }, 3000);    
-    }, 3000);
-    */
+   mySlider = slider('.slides');
+   showSlide('#intro');
 }
 
 document.onload = init();
@@ -799,14 +905,61 @@ function startGame()
         seatNames.push(nama);
         seatOrigins.push(origin);
     }
-    console.log("SEATS:");
-    console.log(seats);
     if (seats.length < 1)
         console.log('*** no players');
     else
     {
-        nextState = shufflePlayers;
         showSlide('#game');
+        nextState = shufflePlayers;
     }
 }
 
+var idStartMusic=0;
+var idBgMusic=0;
+var started = false;
+function startToPlay()
+{
+    if (started)
+        return;
+    started = true;
+    if (introTimerID > 0)
+        clearInterval(introTimerID);
+    introTimerID = 0;
+    introMsgDiv.innerHTML = '<i>p r e s e n t s</i>';
+    introMsgDiv.style.marginLeft =  "-76px";
+
+    bgMusic = new Howl({
+        src: ['res/fx/mars-SDH.mp3'],
+        sprite: {
+            full: [0, 18100, false],
+            bg: [7300, 17000, true]
+          },        
+        html5: true,
+        buffer:false,
+        autoplay:false,
+        preload:true,
+        loop:false,
+        onload: function() {
+            console.log("* loaded");
+        },
+        onend: function(id) {
+            console.log("end:", id);
+            if (id == idStartMusic)
+            {
+                bgMusic.stop();
+            }
+            if (idBgMusic == 0)
+            {
+                idBgMusic = bgMusic.play('bg');            
+            }
+        }
+    });
+    idStartMusic = bgMusic.play('full');
+    setTimeout(function() {
+        showSlide('#splash');
+        bgMusic.fade(1.0, 0.05,3000);
+        setTimeout(function() {
+            showSlide('#rules');
+        }, 5000);
+    }, 5000);
+ }

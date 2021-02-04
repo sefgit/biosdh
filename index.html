@@ -3,6 +3,7 @@
 <head>
 <title>ATCG - UPH Biotech</title>
 <meta name="viewport" content="width=640, initial-scale=1, user-scalable=yes">
+<script src="res/howler.core.min.js"></script>
 <script src="res/howler.min.js"></script>
 <script src="res/pixi.min.js"></script>
 <script src="res/slider.js"></script>
@@ -126,6 +127,17 @@ input, select {
     background-image: url('res/intro.png');
     background-repeat: no-repeat;
     background-position: center;
+}
+#intromsg {
+    position:fixed;
+    top: 50%;
+    left: 50%;
+    padding-top: 150px;
+    margin-left: -210px;
+    opacity: 0.5;
+    font-size: 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    color:white;
 }
 #splash {
     background-color: #000000;
@@ -304,34 +316,28 @@ input, select {
 
 
 #progressBar {
-  margin-bottom:10px;
-  margin-left:18px;
   width: 300px;
   height: 14px;
-  background-color: green;
+  background-color: darkgreen;
   border:1px solid darkkhaki;
   border-radius: 5px;
   display: inline-block;
 }
 
-#progressBar div {
-  height: 100%;
-  text-align: right;
-  padding: 0 10px;
-  line-height: 14px;
-  width: 30%;
-  background-color: transparent;
-  box-sizing: border-box;
-  background-image: url('res/timer.png');
-  background-repeat: no-repeat;
+#bar {
+    margin-bottom:18px;
+    width:0px;
+    height:100%;
 }
 
 </style>
 </head>    
 <body onselectstart="return false;" oncontextnmenu="return false;">
     <div class="slides">
-        <section id="intro" onclick="showSlide('#splash');"></section>
-        <section id="splash" onclick="showSlide('#rules');"></section>
+        <section id="intro" onclick="startToPlay();">
+                <div id="intromsg">please CLICK HERE to start our journey ...</div>
+        </section>
+        <section id="splash" xonclick="showSlide('#rules');"></section>
         <section id="rules">
             <div id="shieldlist">
                 <div class="glow header" onclick="showSlide('#form');">Protection<hr></div>
@@ -377,7 +383,7 @@ input, select {
                         <div class="entry">
                             <div class="col avatar avatar0"></div>
                             <div class="col_left ">
-                                <input value="player1" type="text" name="nama" autocomplete="off" placeholder="name" onblur="enableGo()"><br>
+                                <input value="budi" type="text" name="nama" autocomplete="off" placeholder="name" onblur="enableGo()"><br>
                                 <select name="origin" onblur="enableGo()">
                                     <option value="">location</option>
                                     <option selected>Bangka</option>
@@ -397,7 +403,7 @@ input, select {
                         <div class="entry">
                             <div class="col avatar avatar1"></div>
                             <div class="col_left ">
-                                <input value="player2" type="text" name="nama" autocomplete="off" placeholder="name" onblur="enableGo()"><br>
+                                <input value="tuti" type="text" name="nama" autocomplete="off" placeholder="name" onblur="enableGo()"><br>
                                 <select name="origin" onblur="enableGo()">
                                     <option value="">location</option>
                                     <option>Bangka</option>
@@ -417,7 +423,7 @@ input, select {
                         <div class="entry">
                             <div class="col avatar avatar2"></div>
                             <div class="col_left ">
-                                <input value="player3" type="text" name="nama" autocomplete="off" placeholder="name" onblur="enableGo()"><br>
+                                <input value="unyil" type="text" name="nama" autocomplete="off" placeholder="name" onblur="enableGo()"><br>
                                 <select name="origin" onblur="enableGo()">
                                     <option value="">location</option>
                                     <option>Bangka</option>
@@ -561,26 +567,16 @@ input, select {
                     onmouseout="newStyle(this, 'col tcbtn btnT0')"
                     onclick="quizOK();">
                 </div>
-                <div id="progressBar"><div class="bar"></div></div>
+                <div id="progressBar"><img id="bar" src="res/timer.png"></div>
             </div>
             <div id="qcontainer">
-                <iframe id="qurl" src="https://docs.google.com/presentation/d/e/2PACX-1vQ5f8fhzrxR0EjPJWdB6OU1VTUTtHd0lvk8zs8GBrvW7xIwi1kDCNKYAIxW5YgQU4uWVIXujfkEM78n/embed?start=false&loop=false&delayms=3000" frameborder="0" allowfullscreen="false" mozallowfullscreen="false" webkitallowfullscreen="false"></iframe>            
+<!-- https://docs.google.com/presentation/d/e/2PACX-1vQ5f8fhzrxR0EjPJWdB6OU1VTUTtHd0lvk8zs8GBrvW7xIwi1kDCNKYAIxW5YgQU4uWVIXujfkEM78n/embed?start=false&loop=false&delayms=3000
+-->
+                <iframe id="qurl" src="about:blank" frameborder="0" allowfullscreen="false" mozallowfullscreen="false" webkitallowfullscreen="false"></iframe>            
                 <div id="qbanner">(C) 2021 - UPH BIOTECH</div>
             </div>
         </section>
       </div>  
-      <script>
-        var mySlider = slider('.slides');
-        function showSlide(n) {mySlider.gotoSlide(n);}
-
-        setTimeout(function() {
-            showSlide('#intro');
-            //setTimeout(function() {
-            //    showSlide('#game');
-            //}, 1000);
-        }, 1000);
-
-      </script>
 <script src="main.js"></script>
 </body>
 </html>
