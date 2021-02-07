@@ -3,11 +3,12 @@
 <head>
 <title>ATCG - UPH Biotech</title>
 <meta name="viewport" content="width=640, initial-scale=1, user-scalable=yes">
+<script src="quiz.js"></script>
 <script src="res/howler.core.min.js"></script>
 <script src="res/howler.min.js"></script>
 <script src="res/pixi.min.js"></script>
 <script src="res/slider.js"></script>
-<style>
+<style>    
 *,
 *::before,
 *::after {
@@ -27,7 +28,6 @@ body {
     -ms-user-select: none;
     user-select: none;
 }
-
 input, select { 
     opacity: 0.7;;
     padding: 0px 10px; 
@@ -229,7 +229,16 @@ input, select {
     font-size: 18pt;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     color: white;
-    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #49ff18, 0 0 30px #49ff18, 0 0 40px #49ff18, 0 0 55px #49ff18, 0 0 75px #49ff18    
+    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #49ff18, 0 0 30px #49ff18, 0 0 40px #49ff18, 0 0 55px #49ff18, 0 0 75px #49ff18;
+}
+.glow2 {
+    text-align: center;
+    font-size: 24pt;
+    font-family: bold;
+    padding-bottom: 5px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color:darkorange;
+    text-shadow: 0 0 3px #fff, 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #49ff18, 0 0 25px #49ff18, 0 0 30px #49ff18, 0 0 40px #49ff18, 0 0 60px #49ff18    
 }
 .header {
     text-align: left;
@@ -314,6 +323,7 @@ input, select {
 .btnC1 { background-position: -67px 0px; }
 .btnC0 { background-position: -67px -64px; }
 
+#tick { visibility: hidden; }
 
 #progressBar {
   width: 300px;
@@ -325,11 +335,80 @@ input, select {
 }
 
 #bar {
-    margin-bottom:18px;
-    width:0px;
-    height:100%;
+    position:fixed;
+    width:300px;
+    height:14px;
+    border-radius: 5px;
+    clip: rect(0,0,14px,0);
 }
-
+#xxbar {
+    position:fixed;
+    margin-bottom:18px;
+    top:0;
+    left:0;
+    width:300px;
+    height:14px;
+    clip: rect(0,0,200px,0);
+}
+#xbar {
+    margin-bottom:18px;
+    width:300px;
+    height:14px;
+}
+#quitpanel {
+    width:100%;
+    height:100%;
+    padding-top: 200px;
+    display: none;
+}
+#quitmsg {
+    padding-bottom: 50px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 24pt;
+    color: white;
+    text-align: center;
+}
+#winner {
+    display: none;
+    position:absolute;
+    margin-left: 50%;
+    top: 125px;
+    left: -300px;
+    width:600px;
+    height:400px;
+    background-image: url('res/winner.png');
+    background-repeat: no-repeat;
+    background-color: transparent;
+    border:5px solid darkgray;
+    border-radius: 5px;;
+}
+#winnerlist {
+    margin: 0px;
+    padding: 0px;
+    width:100%;
+    height:100%;
+    text-align:center;
+    color:darkorange;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 24pt;
+    padding-top: 80px;
+}
+.small {
+    font-size: 18pt;
+}
+#TGIF {
+    visibility: hidden;
+    position: absolute;
+    opacity: 0.7;
+    z-index:777;
+    bottom: 25px;
+    left: 50px;
+    right: 60px;
+    color:white;
+    font-family: bold;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 12pt;
+}
 </style>
 </head>    
 <body onselectstart="return false;" oncontextnmenu="return false;">
@@ -354,8 +433,8 @@ input, select {
                     <br clear>
                     <div class="col shield shield5" onmouseout="newInfo()" onmouseover="newInfo('regular physical exercise')"></div>
                     <div class="col shield shield6" onmouseout="newInfo()" onmouseover="newInfo('get covid vaccine')"></div>
-                    <div class="col shield shield12" onmouseout="newInfo()" onmouseover="newInfo('let\'s beat covid')"
-                        onclick="showSlide('#form');"></div>
+                    <div class="col shield shield12" onmouseout="newInfo()" onmouseover="newInfo('let\'s beat covid'); fxplay('ok2');"
+                        onclick="showSlide('#form');fxplay('ding1');"></div>
                     <div class="col shield shield7" onmouseout="newInfo()" onmouseover="newInfo('avoid crowd')"></div>
                     <br clear>
                     <div class="col shield shield8" onmouseout="newInfo()" onmouseover="newInfo('eat healthy food')"></div>
@@ -548,7 +627,7 @@ input, select {
                         <button id="btnstop" class="btn stop_off" 
                             onmouseover="newStyle(this, 'btn stop_on')"
                             onmouseout="newStyle(this, 'btn stop_off')"
-                            onclick="startGame()">
+                            onclick="startGame();fxplay('ding1');">
                         </button>
                     </div>
                 </div>
@@ -556,23 +635,53 @@ input, select {
         </section>
         <section id="game"></section>
         <section id="quiz">
-            <div id="quizpanel">
-                <div id="cross" class="col tcbtn btnC0"
+            <div id="TGIF"><marquee>
+                UPH - UNIVERSITAS PELITA HARAPAN - To be a Christ-centered university founded upon and promoting true knowledge, faith in Christ and godly character aiming to develop God-fearing, competent and professional future leaders through excellent, holistic and transformational education -
+                Glory, honour and praise to our Lord and Saviour, Jesus Christ - By His love we are saved and given love, strength and passion to serve with our best ! 
+                For more information, please visit https://uph.edu
+            </marquee></div>
+            <div id="winner" onclick="showEndCredits()">
+                <div id="winnerlist">
+                    <div class="glow2">
+                        and the WINNERS are ...
+                    </div>
+                </div>
+            </div>
+            <div id="quitpanel">
+                <div id="quitmsg">
+                    Do you want to end<br>this game now ?
+                <br>
+                <br>
+                <div class="col tcbtn btnT0"
+                    onmouseover="newStyle(this, 'col tcbtn btnT1')"
+                    onmouseout="newStyle(this, 'col tcbtn btnT0')"
+                    onclick="donePlaying();">
+                </div>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <div class="col tcbtn btnC0"
                     onmouseover="newStyle(this, 'col tcbtn btnC1')"
                     onmouseout="newStyle(this, 'col tcbtn btnC0')"
-                    onclick="quizNOK();;">
+                    onclick="keepPlaying();">
                 </div>
+                </div>
+            </div>
+            <div id="quizpanel">
                 <div id="tick" class="col tcbtn btnT0"
                     onmouseover="newStyle(this, 'col tcbtn btnT1')"
                     onmouseout="newStyle(this, 'col tcbtn btnT0')"
                     onclick="quizOK();">
                 </div>
+                <div id="cross" class="col tcbtn btnC0"
+                    onmouseover="newStyle(this, 'col tcbtn btnC1')"
+                    onmouseout="newStyle(this, 'col tcbtn btnC0')"
+                    onclick="quizNOK();;">
+                </div>
                 <div id="progressBar"><img id="bar" src="res/timer.png"></div>
             </div>
             <div id="qcontainer">
-<!-- https://docs.google.com/presentation/d/e/2PACX-1vQ5f8fhzrxR0EjPJWdB6OU1VTUTtHd0lvk8zs8GBrvW7xIwi1kDCNKYAIxW5YgQU4uWVIXujfkEM78n/embed?start=false&loop=false&delayms=3000
--->
-                <iframe id="qurl" src="about:blank" frameborder="0" allowfullscreen="false" mozallowfullscreen="false" webkitallowfullscreen="false"></iframe>            
+                <iframe id="qurl" src="about:blank" frameborder="0" allowfullscreen="false" 
+                    mozallowfullscreen="false" webkitallowfullscreen="false"></iframe>            
                 <div id="qbanner">(C) 2021 - UPH BIOTECH</div>
             </div>
         </section>
