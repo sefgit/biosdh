@@ -1,4 +1,5 @@
-var fxMode;
+var fxMode = "tense";
+var fxLevel = 0.2;
 var barCounter; // Quiz timeout in seconds
 var urls;
 var mySlider;
@@ -70,6 +71,7 @@ var curPlayer = -1;
 const mavatars = {};
 var players = {};
 var winners;
+var animal;
 var winnerNames;
 var counters;
 var ranks;
@@ -127,7 +129,7 @@ const idle = function(n) {};
 var nextState = idle;
 var x = 50.0;
 var road_index = 0;
-
+var shield_index = 0;
 // Listen for animate update
 function ticker(delta) 
 {
@@ -140,6 +142,17 @@ function ticker(delta)
         if (road_index > 2)
             road_index = 0;
         road[road_index].visible = true;
+        var oidx = shield_index;
+        var a = shields[oidx].alpha;
+        a += 0.3;
+        if (a > 2) 
+        {
+            a = 0.3;
+            shield_index += 1;
+            if (shield_index >= shields.length)
+                shield_index = 0;
+        }
+        shields[oidx].alpha = a;
     }
     x -= delta;
     if (offBtnTimer > 0)
@@ -311,13 +324,18 @@ function doTurn(retried)
     px = ranks[curPlayer];
     px.alpha = 1.0;     
     covidLoop.visible = false;
-    playerName.text = seatNames[idx] + '\n' + seatOrigins[idx];
+    var city = seatOrigins[idx];
+    playerName.text = seatNames[idx] + '\n' + city;
     playerName.visible = true;
     actg.visible = true;
     var nama = 'avatar' + idx;
     var p = mavatars[nama];
     delayNextPlayer = 8;
     nextPlayerYpos = p.y;
+
+    animal.texture = app.loader.resources[city].texture;
+    animal.visible = true;
+
     nextState = nextPlayerJumping;
     if (!retried)
         fxplay('letsdoit');
@@ -477,6 +495,7 @@ function quizOK()
     var id = 'ok' + n.toString();
     fxplay(id);
     setTimeout(function() {
+        bgMusic.fade(0,0.1,2000);
         gotoNextCity();
     },1000);    
 }
@@ -491,6 +510,7 @@ function quizNOK()
     fxplay(id);
     nextSteps = 0;
     setTimeout(function() {
+        bgMusic.fade(0,0.1,2000);
         fxplay('stayathome');
         stayAtHomeBtn.interactive = true;
         stayAtHomeBtn.visible = true;
@@ -504,7 +524,7 @@ function updateQuizTimer()
 {
     if (barTimerCounter >= 0)
     {
-        if (barTimerCounter < 25)
+        if (barTimerCounter < 27)
         {
             if (!loaded)
             {
@@ -580,6 +600,7 @@ function getUrls() {
 
 function showQuiz()
 {
+    bgMusic.fade(0.1, 0,2000);
     loaded = false;
     skipped = false;
     var e = document.getElementById('tick');
@@ -909,6 +930,7 @@ function goBtnUp()
 {
     resetTimer();
     fxplay('ding1');
+    animal.visible = false;
     goBtn.texture = textureGoBtn0;
     var idx = seats[curPlayer];
     var nama = 'avatar' + idx;
@@ -1054,7 +1076,7 @@ function fxtimerplay(n)
     }
     id = fxtimer.play(n);
     fxtimer.loop(false, id);
-    fxtimer.fade(1.0,0.2,5000,id);
+    fxtimer.fade(1.0,fxLevel,5000,id);
     timerplayed[n] = id;
 }
 function fxtimerloop(n)
@@ -1070,7 +1092,7 @@ function fxtimerloop(n)
     }
     id = fxtimer.play(n);
     fxtimer.loop(true, id);
-    fxtimer.fade(1.0,0.2,5000,id);
+    fxtimer.fade(1.0,fxLevel,5000,id);
     timerplayed[n] = id;
 }
 function fxtimerstop(n)
@@ -1103,8 +1125,77 @@ function fxtimerstop(n)
     fxtimerplay('tnull');
 }
 
+function updateFx()
+{
+    switch(fxMode) {
+        case "fun":
+            fxLevel = 0.5;
+        // t4 switch with t3
+            fxtimer = new Howl({
+                src: ['res/fx/atcg-timers.mp3'],
+                sprite: {
+                    t1: [0, 2300, true],
+                    t2: [2830, 1720, true],
+                    t3: [4860, 3450, true], 
+                    t4: [9250, 4720, true],
+                    t5: [14280, 1700, true],
+                    tend: [16252, 50300, false],
+                    tnull: [21600, 1000, false]
+                },        
+                html5: true,
+                buffer:true,
+                autoplay:false,
+                preload:true,
+                loop:false
+            });
+            break;
+        case "relax":
+            fxLevel = 0.5;
+            fxtimer = new Howl({
+                src: ['res/fx/atcg-fx-ukulele.mp3'],
+                sprite: {
+                    t1: [0, 6882, true],
+                    t2: [7900, 6000, true],
+                    t3: [14652, 6852, true],
+                    t4: [22513, 6248, true],
+                    t5: [30876, 1795, true],
+                    tend: [34887, 50100, false],
+                    tnull: [42500, 1000, false]
+                },        
+                html5: true,
+                buffer:true,
+                autoplay:false,
+                preload:true,
+                loop:false
+            });
+            break;
+        default:
+            fxLevel = 0.2;
+            fxtimer = new Howl({
+                src: ['res/fx/atcg-fx-funday.mp3'],
+                sprite: {
+                    t1: [0, 2889, true],
+                    t2: [3900, 4650, true],
+                    t3: [9324, 4868, true],
+                    t4: [14861, 4182, true],
+                    t5: [19800, 2700, true],
+                    tend: [23452, 5100, false],
+                    tnull: [28900, 1000, false]
+                  },        
+                html5: true,
+                buffer:true,
+                autoplay:false,
+                preload:true,
+                loop:false
+            });
+        }        
+}
+
 function startGame() 
 {
+    var ee = document.getElementsByName('theme')[0];
+    fxMode = ee.value;
+    updateFx();
     curCities = ["","","","","","","",""];
     ranks = [];
     counters = [];
@@ -1125,7 +1216,10 @@ function startGame()
         seatOrigins.push(origin);
     }
     if (seats.length < 1)
+    {
         console.log('*** no players');
+        fxloop('fail1');
+    }
     else
     {
         showSlide('#game');
@@ -1145,7 +1239,6 @@ function startToPlay()
     started = true;
     if (introTimerID > 0)
         clearInterval(introTimerID);
-    fxMode = fxTheme ? fxTheme : "";
     introTimerID = 0;
     introMsgDiv.innerHTML = '<i>p r e s e n t s</i>';
     introMsgDiv.style.marginLeft =  "-76px";
@@ -1201,66 +1294,7 @@ function startToPlay()
         preload:true,
         loop:false
     });
-    switch(fxMode) {
-    case "game":
-    // t4 switch with t3
-        fxtimer = new Howl({
-            src: ['res/fx/atcg-timers.mp3'],
-            sprite: {
-                t1: [0, 2300, true],
-                t2: [2830, 1720, true],
-                t3: [4860, 3450, true], 
-                t4: [9250, 4720, true],
-                t5: [14280, 1700, true],
-                tend: [16252, 50300, false],
-                tnull: [21600, 1000, false]
-            },        
-            html5: true,
-            buffer:true,
-            autoplay:false,
-            preload:true,
-            loop:false
-        });
-        break;
-    case "relax":
-        fxtimer = new Howl({
-            src: ['res/fx/atcg-fx-ukulele.mp3'],
-            sprite: {
-                t1: [0, 6882, true],
-                t2: [7900, 6000, true],
-                t3: [14652, 6852, true],
-                t4: [22513, 6248, true],
-                t5: [30876, 1795, true],
-                tend: [34887, 50100, false],
-                tnull: [42500, 1000, false]
-            },        
-            html5: true,
-            buffer:true,
-            autoplay:false,
-            preload:true,
-            loop:false
-        });
-        break;
-    default:
-        fxtimer = new Howl({
-            src: ['res/fx/atcg-fx-funday.mp3'],
-            sprite: {
-                t1: [0, 2889, true],
-                t2: [3900, 4650, true],
-                t3: [9324, 4868, true],
-                t4: [14861, 4182, true],
-                t5: [19800, 2700, true],
-                tend: [23452, 5100, false],
-                tnull: [28900, 1000, false]
-              },        
-            html5: true,
-            buffer:true,
-            autoplay:false,
-            preload:true,
-            loop:false
-        });
-    }
-
+    updateFx();
     endMusic = new Howl({
         src: ['res/fx/atcg-ukulele.mp3'],
         html5: true,
@@ -1330,7 +1364,6 @@ function startToPlay()
         .on("touchend", thropyBtnUp);
     container.addChild(thropyBtn);
 
-
     var actg_texture = app.loader.resources["atcg"].texture;
     actg = new PIXI.Sprite(actg_texture);
     actg.x = 30;
@@ -1397,6 +1430,18 @@ function startToPlay()
     container.addChild(p);
     stayAtHomeBtn = p;
 
+    animal = new PIXI.Sprite(app.loader.resources["Lippo Village"].texture);
+    //animal.x = 522;
+    //animal.y = 380;
+    //animal.anchor.set(0.5,1);
+    animal.x = 35;
+    animal.y = 35;
+    animal.scale.set(2.0,2.0);
+    animal.anchor.set(0,0);
+    animal,alpha = 0.2;
+    animal.visible = false;
+    container.addChild(animal);
+
     var div = document.getElementById('game');
     div.appendChild(app.view);
     app.stage.addChild(container);  
@@ -1432,8 +1477,18 @@ function startToPlay()
     .add("thropy", "res/thropy.png")
     .add("thropy0", "res/thropy0.png")
     .add("mavatars", "res/mavatar.json")
+    .add("Bangka", "res/animals/bangka.png")
+    .add("Bogor", "res/animals/bogor.png")
+    .add("Cikarang", "res/animals/cikarang.png")
+    .add("Daan Mogot", "res/animals/daanmogot.png")
+    .add("Holland Village", "res/animals/hollandvillage.png")
+    .add("Kupang", "res/animals/kupang.png")
+    .add("Lubuk Linggau", "res/animals/lubuklinggau.png")
+    .add("Lippo Village", "res/animals/lippovillage.png")
+    .add("Makassar", "res/animals/makassar.png")
+    .add("Palembang", "res/animals/palembang.png")
+    .add("Ranotana", "res/animals/ranotana.png")
     .load(setup);
-
     showSlide('#intro');
 }
 

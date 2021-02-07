@@ -1,5 +1,3 @@
-const fxTheme = "";  // "game", "soft", "power" (default: "power")
-
 const quizTimeoutInSeconds = 30; 
 
 const quizA = [
