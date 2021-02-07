@@ -13,11 +13,17 @@ Provided as-is, use it as you wish, without any warranty or support.
 
 - Mars SDH rearranged by Henry Awuy
 
-source: 
-
 https://www.youtube.com/watch?v=TQWJ58r8qrs
 
 
-- Sound fx downloaded from 
+- Royalty Free Fx Clips from
 
 https://mixkit.co/free-sound-effects/
+
+
+- Ukulele
+
+- Fun Day
+
+Royalty Free Music from Bensound
+
