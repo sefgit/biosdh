@@ -220,7 +220,7 @@ function nextCity(delta)
                 counters[curPlayer] = pos;
                 if (pos == 11)
                 {
-                    winners.push(curPlayer); // got a winner
+                    winners.push(idx); // got a winner
                     gotWinner = true;
                 }
             }
@@ -787,20 +787,6 @@ function rollATCG()
     nextState = rollingATCG;    
 }
 
-function keepPlaying()
-{
-    showSlide('#game');
-    var e = document.getElementById('quitpanel');
-    if (e)
-        e.style.display = 'none';
-    e = document.getElementById('quizpanel');
-    if (e)
-    e.style.display = 'block';
-    e = document.getElementById('qcontainer');
-    if (e)
-    e.style.display = 'block';
-}
-
 var idWaiting = 0;
 
 function endCredits()
@@ -862,9 +848,9 @@ function showThropy()
     var counter = 0;
     for(var a in winners) 
     {
-        var id = winners[a];
-        winner_names += '<div class="glow2">' + seatNames[id];
-        winner_names += '</div><div class="small">' + seatOrigins[id] + '</div>';
+        var idx = winners[a];
+        winner_names += '<div class="glow2">' + seatNames[idx];
+        winner_names += '</div><div class="small">' + seatOrigins[idx] + '</div>';
         counter++;
         if (counter >= 3)
             break;
@@ -887,6 +873,7 @@ function donePlaying()
     fxtimerstop();
     if (bgMusic)
         bgMusic.stop();
+    fxplay('ding1');
     var e = document.getElementById('qurl');
     if (e)
         e.src = "about:blank";
@@ -906,8 +893,24 @@ function donePlaying()
     setTimeout(showThropy, 5000);
 }
 
+function keepPlaying()
+{
+    fxplay('ding1');
+    showSlide('#game');
+    var e = document.getElementById('quitpanel');
+    if (e)
+        e.style.display = 'none';
+    e = document.getElementById('quizpanel');
+    if (e)
+    e.style.display = 'block';
+    e = document.getElementById('qcontainer');
+    if (e)
+    e.style.display = 'block';
+}
+
 function quitPlaying()
 {
+    fxplay('ding1');
     var e = document.getElementById('qurl');
     if (e)
         e.src = "about:blank";
@@ -1285,7 +1288,7 @@ function startToPlay()
             guanine: [22533, 710, false],
             thymine: [23710, 710, false],
             cytosine: [25092, 990, false],
-            letsdoit: [26370, 1200, false],
+            letsdoit: [26390, 1200, false],
             jump: [27650, 1000, false]
           },        
         html5: true,
