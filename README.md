@@ -5,6 +5,7 @@ This educational game serves the purpose to educate K-12 how to protect themself
 Have fun learning and playing.
 
 Disclaimer:
+
 For educational purposes only.
 Provided as-is, use it as you wish, without any warranty or support.
 
