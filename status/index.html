@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Status - ATCG - UPH Biotech</title>
+<meta name="viewport" content="width=640, initial-scale=1, user-scalable=yes">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<script src="../quiz.js"></script>
+<style>    
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {margin:0;padding:0;height: 100%;}
+body {
+    font-size: 12pt;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.error {
+    color: maroon;
+}
+</style>
+<script>
+function getOK(nr, url)
+{
+    var xhr = new XMLHttpRequest();
+    xhr.open("HEAD", url, false);
+    xhr.send();
+    if (xhr.status == 200)
+    {
+        document.write('<a target="_blank" href="', url, '">OK: ',nr,'</a>&nbsp;');
+    }
+    else
+    {
+        document.write('<br><a  class="error" target="_blank" href="', url, '">ERROR: ',nr,' : error = ', xhr.status, ' / ', xhr.responseText,'</a><br>');
+    }
+    return(xhr.status);
+}
+function checkCredits()
+{
+    document.write('Credits :');
+    getOK(0, credits);
+    document.write('<hr><hr>');
+}
+
+function checkQuizG() 
+{
+    var counter = quizG.length;
+    var idTimer = setInterval(function() {
+        if (counter == quizG.length)
+            document.write('Quiz G: ', quizG.length, '<br>');
+        counter--;
+        if (counter < 0) {
+            clearInterval(idTimer);            
+            document.write('<hr>')
+            checkCredits();
+            return;
+        }
+        getOK(counter, quizG[counter]);
+    }, 1000);
+}
+function checkQuizC() 
+{
+    var counter = quizC.length;
+    var idTimer = setInterval(function() {
+        if (counter == quizC.length)
+            document.write('Quiz C: ', quizC.length, '<br>');
+        counter--;
+        if (counter < 0) {
+            clearInterval(idTimer);
+            document.write('<hr>')
+            checkQuizG();
+            return;
+        }
+        getOK(counter, quizC[counter]);
+    }, 1000);
+}
+function checkQuizT() 
+{
+    var counter = quizT.length;
+    var idTimer = setInterval(function() {
+        if (counter == quizT.length)
+            document.write('Quiz T: ', quizT.length, '<br>');
+        counter--;
+        if (counter < 0) {
+            clearInterval(idTimer);
+            document.write('<hr>')
+            checkQuizC();
+            return;
+        }
+        getOK(counter, quizT[counter]);
+    }, 1000);
+}
+function checkQuizA() 
+{
+    var counter = quizA.length;
+    var idTimer = setInterval(function() {
+        if (counter == quizA.length)
+            document.write('Quiz A: ', quizA.length, '<br>');
+        counter--;
+        if (counter < 0) {
+            clearInterval(idTimer);
+            document.write('<hr>')
+            checkQuizT();
+            return;
+        }
+        getOK(counter, quizA[counter]);
+    }, 1000);
+}
+function checkIntros() 
+{
+    var counter = intros.length;
+    var idTimer = setInterval(function() {
+        if (counter == intros.length)
+            document.write('Intros: ', intros.length, '<br>');
+        counter--;
+        if (counter < 0) {
+            clearInterval(idTimer);
+            document.write('<hr>')
+            checkQuizA();
+            return;
+        }
+        getOK(counter, intros[counter]);
+    }, 1000);
+}
+function init() 
+{
+    document.write('ATCG - verifying slides ...<br>')
+    checkIntros();
+    //checkCredits();
+}
+</script>
+</head>    
+<body onload="init()" onselectstart="return false;" oncontextnmenu="return false;">
+</body>
+</html>
