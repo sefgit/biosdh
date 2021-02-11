@@ -106,22 +106,35 @@ var textureGoBtn1;
 
 PIXI.utils.skipHello();
 
-const app = new PIXI.Application({
-    resizeTo: window,
-    width: 640, height: 480, 
-    backgroundColor: 0x1099bb, 
-    resolution: window.devicePixelRatio || 1,
-});
-
-const container = new PIXI.Container();
-container.sortableChildren = true;
+var app;
+var container;
 
 const resize = function() 
 {
-    var xscale = window.innerWidth / 640;
-    var yscale = window.innerHeight / 480;
-    container.scale.x = xscale;
-    container.scale.y = yscale;   
+    var w = window.innerWidth
+            || document.documentElement.clientWidth
+            || document.body.clientWidth;
+
+    var h = window.innerHeight
+    || document.documentElement.clientHeight
+    || document.body.clientHeight;
+
+    app.renderer.resize(w, h);
+    setTimeout(function() {
+        var w = window.innerWidth
+        || document.documentElement.clientWidth
+        || document.body.clientWidth;
+
+        var h = window.innerHeight
+        || document.documentElement.clientHeight
+        || document.body.clientHeight;
+        var xscale = w / 640;
+        var yscale = h / 480;
+        //container.scale.x = xscale;
+        //container.scale.y = yscale;   
+        app.stage.scale.x = xscale;
+        app.stage.scale.y = yscale;   
+    }, 300);
 };
 
 var offBtnTimer = 0;
@@ -1231,6 +1244,28 @@ function startGame()
     }
 }
 
+function toggleFullScreen() {
+    // Check for browser support of service worker
+    if (window.matchMedia('(display-mode: fullscreen)').matches == true)
+        return;
+
+    if(navigator.standalone == true)
+        return;
+
+    var doc = window.document;
+    var docEl = doc.documentElement;
+  
+    var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+    //var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+  
+    if(!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+      requestFullScreen.call(docEl);
+    }
+    //else {
+    //  cancelFullScreen.call(doc);
+    //}
+}
+
 
 var idStartMusic=0;
 var idBgMusic=0;
@@ -1239,6 +1274,7 @@ function startToPlay()
 {
     if (started)
         return;
+    toggleFullScreen();
     started = true;
     if (introTimerID > 0)
         clearInterval(introTimerID);
@@ -1272,13 +1308,13 @@ function startToPlay()
     fx = new Howl({
         src: ['res/fx/atcg-fx.mp3'],
         sprite: {
-            bug: [0, 850, true],
-            ok: [1010, 1100, false],
-            ding1: [2200, 300, false],
-            ding2: [2590, 1000, false],
-            roll1: [4000, 1000, true],
+            bug: [50, 700, true],
+            ok: [1100, 600, false],
+            ding1: [2180, 120, false],
+            ding2: [2590, 900, false],
+            roll1: [4100, 900, true],
             ok1: [5700, 2340, false],
-            fail1: [8340, 1900, false],
+            fail1: [8340, 1700, false],
             fail2: [10355, 1210, false],
             ok2: [11810, 1990, false],
             countdown: [14690, 3316, false],
@@ -1429,7 +1465,8 @@ function startToPlay()
     p.y = 140;
     p.x = 260;
     p.visible = false;
-    p.on("mousedown", stayAtHome);
+    p.on("mousedown", stayAtHome)
+     .on("touchend", stayAtHome);
     container.addChild(p);
     stayAtHomeBtn = p;
 
@@ -1444,12 +1481,6 @@ function startToPlay()
     animal,alpha = 0.2;
     animal.visible = false;
     container.addChild(animal);
-
-    var div = document.getElementById('game');
-    div.appendChild(app.view);
-    app.stage.addChild(container);  
-    window.onresize = resize;    
-    resize();
     app.ticker.add(ticker);
 }
 
@@ -1462,7 +1493,20 @@ function startToPlay()
     urls.push(shuffle(quizC));''
     urls.push(shuffle(quizG));''
 
-    //return;
+    app = new PIXI.Application({
+        autoResize: true,
+        //resizeTo: window,
+        backgroundColor: 0x1099bb, 
+        resolution: window.devicePixelRatio || 1,
+    });
+    
+    container = new PIXI.Container();
+    container.sortableChildren = true;
+    var div = document.getElementById('game');
+    div.appendChild(app.view);
+    app.stage.addChild(container);  
+    window.onresize = resize;    
+    resize();
 
     app.loader    
     .add("sdhmap", "res/sdhmap.png")
