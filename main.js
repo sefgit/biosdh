@@ -1475,6 +1475,8 @@ var idBgMusic=0;
 var started = false;
 function startToPlay()
 {
+    if (!introMsgDiv)
+        return;
     if (started)
         return;
     toggleFullScreen();
@@ -1483,7 +1485,7 @@ function startToPlay()
         clearInterval(introTimerID);
     introTimerID = 0;
     introMsgDiv.innerHTML = '<i>p r e s e n t s</i>';
-    introMsgDiv.style.top =  "48%";
+    introMsgDiv.style.marginTop =  "150px";
     introMsgDiv.style.marginLeft =  "-76px";
     introMsgDiv.style.opacity = 1.0;
 
@@ -1519,8 +1521,7 @@ function startToPlay()
     }, 3000);
  }
 
-
- function init()  {
+function initATCG()  {
     mySlider = slider('.slides');
     barCounter = quizTimeoutInSeconds?quizTimeoutInSeconds:30; 
     urls = [];
@@ -1541,11 +1542,17 @@ function startToPlay()
     div.appendChild(app.view);
     app.stage.addChild(container);  
     window.onresize = resize;    
-    showSlide('#intro');
     resize();
-    introMsgDiv = document.getElementById('intromsg');
-    introTimerID = setInterval(introMsg, 200);
+    showSlide('#intro');
+    setTimeout(function() {
+        introMsgDiv = document.getElementById('intromsg');
+        if (introMsgDiv)
+        {
+            introMsgDiv.style.display='block';
+            introTimerID = setInterval(introMsg, 200);
+        }    
+    }, 3000);
 }
 
 document.oncontextmenu = new Function("return false;");
-document.onload = init();
+document.onload = initATCG();

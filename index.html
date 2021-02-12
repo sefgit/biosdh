@@ -46,6 +46,9 @@ input, select {
     border-radius: 10px;;
     width:150px;
 }
+.slides {
+    display:none;
+}
 .btn {
     margin-top:10px;
     padding: 50px 80px 0px 80px;
@@ -115,6 +118,8 @@ input, select {
     width:640px;
     margin: 0 auto;
 }
+
+
 @media (min-height: 400px) {
     #list {
         width:440px;
@@ -129,6 +134,9 @@ input, select {
         -moz-transform: scale (1);
         -ms-transform: scale (1);
         transform: scale(1);
+    }
+    #shield_info {
+        font-size: 20pt !important;
     }
     #entryform {
         height: auto;
@@ -193,18 +201,21 @@ input, select {
 #intro {
     background-color: #000000;
     background-image: url('res/intro.png');
+    background-size: 640px 480px;
     background-repeat: no-repeat;
     background-position: center;
 }
 #intromsg {
-    position:fixed;
+    position:absolute;
     left: 50%;
-    padding-top: 160px;
+    top: 50%;
+    margin-top: 70px;
     margin-left: -210px;
     opacity: 0.5;
     font-size: 24px;
     font-family: Arial, Helvetica, sans-serif;
     color:white;
+    display:none;
 }
 #splash {
     background-color: #000000;
@@ -478,7 +489,7 @@ input, select {
                         onmouseover="newInfo('covered coughing or sneezing')"></div>
                     <div class="col shield shield2" onmouseout="newInfo()" onmouseover="newInfo('avoid handshake')"></div>
                     <div class="col shield shield3" onmouseout="newInfo()" onmouseover="newInfo('clean regular use items')"></div>
-                    <div class="col shield shield4" onmouseout="newInfo()" onmouseover="newInfo('stay at home, be safe when outside')"></div>
+                    <div class="col shield shield4" onmouseout="newInfo()" onmouseover="newInfo('stay at home, be safe outside')"></div>
                     <div class="col shield shield5" onmouseout="newInfo()" onmouseover="newInfo('regular physical exercise')"></div>
                     <div class="col shield shield6" onmouseout="newInfo()" onmouseover="newInfo('get covid vaccine')"></div>
                     <div class="col shield shield12" onmouseout="newInfo()" onmouseover="newInfo('let\'s beat covid'); fxplay('ok2');"
