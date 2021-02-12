@@ -471,6 +471,8 @@ function randomCity()
 }
 
 
+var loaded = false;
+var skipped = false;
 var barTimerId = 0;
 var barTimerCounter = 0;
 function resetTimer(keep) 
@@ -495,11 +497,11 @@ function resetTimer(keep)
 }
 
 
-var loaded = false;
-var skipped = false;
 function quizOK()
 {
     if (!loaded)
+        return;
+    if (skipped)
         return;
     skipped = true;
     resetTimer();
@@ -515,13 +517,15 @@ function quizOK()
 
 function quizNOK()
 {
+    if (skipped)
+        return;
     skipped = true;
     resetTimer();
-    showSlide('#game');
     var n = Math.floor(Math.random()*2 + 1);
     var id = 'fail' + n.toString();
     fxplay(id);
     nextSteps = 0;
+    showSlide('#game');
     setTimeout(function() {
         bgMusic.fade(0,0.1,2000);
         fxplay('stayathome');
@@ -616,6 +620,7 @@ function showQuiz()
     bgMusic.fade(0.1, 0,2000);
     loaded = false;
     skipped = false;
+    resetTimer();
     var e = document.getElementById('tick');
     if (e) e.style.visibility = 'hidden';
      e = document.getElementById('qurl');
@@ -1266,96 +1271,8 @@ function toggleFullScreen() {
     //}
 }
 
-
-var idStartMusic=0;
-var idBgMusic=0;
-var started = false;
-function startToPlay()
+function setup()
 {
-    if (started)
-        return;
-    toggleFullScreen();
-    started = true;
-    if (introTimerID > 0)
-        clearInterval(introTimerID);
-    introTimerID = 0;
-    introMsgDiv.innerHTML = '<i>p r e s e n t s</i>';
-    introMsgDiv.style.marginLeft =  "-76px";
-    introMsgDiv.style.opacity = 1.0;
-
-    bgMusic = new Howl({
-        src: ['res/fx/mars-SDH.mp3'],
-        sprite: {
-            full: [0, 18100, false],
-            bg: [7300, 17000, true]
-          },        
-        html5: true,
-        buffer:true,
-        autoplay:false,
-        preload:true,
-        loop:false,
-        onload: function() {
-            bgMusic.fade(0.2, 1.0,2000);
-            idStartMusic = bgMusic.play('full');
-        },
-        onend: function(id) {
-            if (id == idStartMusic)
-                bgMusic.stop();
-            if (idBgMusic == 0)
-                idBgMusic = bgMusic.play('bg');            
-        }
-    });
-    fx = new Howl({
-        src: ['res/fx/atcg-fx.mp3'],
-        sprite: {
-            bug: [50, 700, true],
-            ok: [1100, 600, false],
-            ding1: [2180, 120, false],
-            ding2: [2590, 900, false],
-            roll1: [4100, 900, true],
-            ok1: [5700, 2340, false],
-            fail1: [8340, 1700, false],
-            fail2: [10355, 1210, false],
-            ok2: [11810, 1990, false],
-            countdown: [14690, 3316, false],
-            stayathome: [18200, 1524, false],
-            tryagain: [19834, 1083, false],
-            adenine: [21441, 786, false],
-            guanine: [22533, 710, false],
-            thymine: [23710, 710, false],
-            cytosine: [25092, 990, false],
-            letsdoit: [26390, 1200, false],
-            jump: [27650, 1000, false]
-          },        
-        html5: true,
-        buffer:true,
-        autoplay:false,
-        preload:true,
-        loop:false
-    });
-    updateFx();
-    endMusic = new Howl({
-        src: ['res/fx/atcg-ukulele.mp3'],
-        html5: true,
-        buffer:true,
-        autoplay:false,
-        preload:true,
-        loop:false});
-
-    setTimeout(function() {
-        showSlide('#splash');
-        bgMusic.fade(1.0, 0.1,4000);
-        setTimeout(function() {
-            showSlide('#rules');
-        }, 5000);
-    }, 3000);
- }
-
-
- function setup()
-{
-    introMsgDiv = document.getElementById('intromsg');
-    introTimerID = setInterval(introMsg, 200);
     // Create a new texture
     var texture = app.loader.resources["bgmap"].texture;
     var bgmap = new PIXI.Sprite(texture);
@@ -1417,7 +1334,6 @@ function startToPlay()
     covidLoop.x = 200;
     covidLoop.y = 100;
     covidLoop.visible = false;
-    //covidLoop.play();
 
     container.addChild(covidLoop);
     var sheet = app.loader.resources["mavatars"].spritesheet;
@@ -1447,7 +1363,6 @@ function startToPlay()
         container.addChild(p);
         n++;
     }
-
 
     playerName = new PIXI.Text('Player Name\nLocation', {
         fontFamily: 'Verdana',
@@ -1482,32 +1397,49 @@ function startToPlay()
     animal.visible = false;
     container.addChild(animal);
     app.ticker.add(ticker);
+
+    /////// Sound FX
+    ///////
+    fx = new Howl({
+        src: ['res/fx/atcg-fx.mp3'],
+        sprite: {
+            bug: [50, 700, true],
+            ok: [1100, 600, false],
+            ding1: [2180, 120, false],
+            ding2: [2590, 900, false],
+            roll1: [4100, 900, true],
+            ok1: [5700, 2340, false],
+            fail1: [8340, 1700, false],
+            fail2: [10355, 1210, false],
+            ok2: [11810, 1990, false],
+            countdown: [14690, 3316, false],
+            stayathome: [18200, 1524, false],
+            tryagain: [19834, 1083, false],
+            adenine: [21441, 786, false],
+            guanine: [22533, 710, false],
+            thymine: [23710, 710, false],
+            cytosine: [25092, 990, false],
+            letsdoit: [26390, 1200, false],
+            jump: [27650, 1000, false]
+          },        
+        html5: true,
+        buffer:true,
+        autoplay:false,
+        preload:true,
+        loop:false
+    });
+    updateFx();
+    endMusic = new Howl({
+        src: ['res/fx/atcg-ukulele.mp3'],
+        html5: true,
+        buffer:true,
+        autoplay:false,
+        preload:true,
+        loop:false});
 }
 
- function init()  {
-    mySlider = slider('.slides');
-    barCounter = quizTimeoutInSeconds?quizTimeoutInSeconds:30; 
-    urls = [];
-    urls.push(shuffle(quizA));''
-    urls.push(shuffle(quizT));''
-    urls.push(shuffle(quizC));''
-    urls.push(shuffle(quizG));''
-
-    app = new PIXI.Application({
-        autoResize: true,
-        //resizeTo: window,
-        backgroundColor: 0x1099bb, 
-        resolution: window.devicePixelRatio || 1,
-    });
-    
-    container = new PIXI.Container();
-    container.sortableChildren = true;
-    var div = document.getElementById('game');
-    div.appendChild(app.view);
-    app.stage.addChild(container);  
-    window.onresize = resize;    
-    resize();
-
+function preload()
+{
     app.loader    
     .add("sdhmap", "res/sdhmap.png")
     .add("bgmap", "res/bgmap.png")
@@ -1523,6 +1455,8 @@ function startToPlay()
     .add("off", "res/off.png")
     .add("thropy", "res/thropy.png")
     .add("thropy0", "res/thropy0.png")
+    .add("winner", "res/winner.png")
+    .add("tickcross", "res/tickcross.png")
     .add("mavatars", "res/mavatar.json")
     .add("Bangka", "res/animals/bangka.png")
     .add("Bogor", "res/animals/bogor.png")
@@ -1536,7 +1470,85 @@ function startToPlay()
     .add("Palembang", "res/animals/palembang.png")
     .add("Ranotana", "res/animals/ranotana.png")
     .load(setup);
+}
+
+
+
+var idStartMusic=0;
+var idBgMusic=0;
+var started = false;
+function startToPlay()
+{
+    if (started)
+        return;
+    toggleFullScreen();
+    started = true;
+    if (introTimerID > 0)
+        clearInterval(introTimerID);
+    introTimerID = 0;
+    introMsgDiv.innerHTML = '<i>p r e s e n t s</i>';
+    introMsgDiv.style.top =  "48%";
+    introMsgDiv.style.marginLeft =  "-76px";
+    introMsgDiv.style.opacity = 1.0;
+
+    bgMusic = new Howl({
+        src: ['res/fx/mars-SDH.mp3'],
+        sprite: {
+            full: [0, 18100, false],
+            bg: [7300, 17000, true]
+          },        
+        html5: true,
+        buffer:true,
+        autoplay:false,
+        preload:true,
+        loop:false,
+        onload: function() {
+            bgMusic.fade(0.2, 1.0,2000);
+            idStartMusic = bgMusic.play('full');
+        },
+        onend: function(id) {
+            if (id == idStartMusic)
+                bgMusic.stop();
+            if (idBgMusic == 0)
+                idBgMusic = bgMusic.play('bg');            
+        }
+    });
+    setTimeout(function() {
+        showSlide('#splash');
+        bgMusic.fade(1.0, 0.1,4000);
+        setTimeout(function() {
+            showSlide('#rules');
+            preload();
+        }, 5000);
+    }, 3000);
+ }
+
+
+ function init()  {
+    mySlider = slider('.slides');
+    barCounter = quizTimeoutInSeconds?quizTimeoutInSeconds:30; 
+    urls = [];
+    urls.push(shuffle(quizA));''
+    urls.push(shuffle(quizT));''
+    urls.push(shuffle(quizC));''
+    urls.push(shuffle(quizG));''
+
+    app = new PIXI.Application({
+        autoResize: true,
+        //resizeTo: window,
+        backgroundColor: 0x1099bb, 
+        resolution: window.devicePixelRatio || 1,
+    });    
+    container = new PIXI.Container();
+    container.sortableChildren = true;
+    var div = document.getElementById('game');
+    div.appendChild(app.view);
+    app.stage.addChild(container);  
+    window.onresize = resize;    
     showSlide('#intro');
+    resize();
+    introMsgDiv = document.getElementById('intromsg');
+    introTimerID = setInterval(introMsg, 200);
 }
 
 document.oncontextmenu = new Function("return false;");
