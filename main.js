@@ -621,6 +621,14 @@ function showQuiz()
     loaded = false;
     skipped = false;
     resetTimer();
+    if (nextSteps == 1)
+        fxplay('adenine');
+    else if (nextSteps == 2)
+        fxplay('thymine');
+    else if (nextSteps == 3)
+        fxplay('cytosine');
+    else if (nextSteps == 4)
+        fxplay('guanine');
     var e = document.getElementById('tick');
     if (e) e.style.visibility = 'hidden';
      e = document.getElementById('qurl');
@@ -673,25 +681,13 @@ function doATCG(dice)
     if ((dice > 0) || (dice < 5))
     {
         if (dice == 1)
-        {
-            fxplay('thymine');
             nextSteps = 2;
-        }
         else if (dice == 3)
-        {
-            fxplay('cytosine');
             nextSteps = 3;
-        }
         else if (dice == 4)
-        {
-            fxplay('adenine');
             nextSteps = 1;
-        }
         else if (dice == 5)
-        {
-            fxplay('guanine');
             nextSteps = 4;
-        }
         //gotoNextCity();
         showQuiz();
     }
