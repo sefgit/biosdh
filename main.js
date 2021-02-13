@@ -1232,6 +1232,7 @@ function startGame()
         seatNames.push(nama);
         seatOrigins.push(origin);
     }
+
     if (seats.length < 1)
     {
         console.log('*** no players');
@@ -1431,7 +1432,13 @@ function setup()
         buffer:true,
         autoplay:false,
         preload:true,
-        loop:false});
+        loop:false,
+        onend: function(id) {
+            setTimeout(function() {
+                location.reload();
+            }, 8000);
+        }
+    });
 }
 
 function preload()
