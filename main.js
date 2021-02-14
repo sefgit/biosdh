@@ -372,12 +372,20 @@ function nextPlayer()
     if (counters[curPlayer] < 11)
         doTurn();
     else {
+        var found = false;
         for(var a in counters) {
             if (counters[a] < 11)
             {
+                found = true;
                 nextPlayer();
                 break;
             }
+        }
+        if (!found) {
+            // we're done
+            setTimeout(function() {
+                donePlaying(true);
+            }, 3000);
         }
     }
 }
@@ -809,6 +817,8 @@ function endCredits()
     fxtimerstop();
     if (bgMusic)
         bgMusic.stop();
+    fxstop();
+    fxtimerstop();
     if (endMusic)
         endMusic.play();
     var e = document.getElementById('qurl');
@@ -857,6 +867,8 @@ function showThropy()
     fxtimerstop();
     if (bgMusic)
         bgMusic.stop();
+    fxstop();
+    fxtimerstop();
     fxtimerplay("tend");
     var winner_names = '';
     var counter = 0;
@@ -881,13 +893,16 @@ function showThropy()
     }, 20000);
 }
 
-function donePlaying()
+function donePlaying(silent=false)
 {
     fxstop();
     fxtimerstop();
     if (bgMusic)
         bgMusic.stop();
-    fxplay('ding1');
+    if (silent)
+        showSlide('#quiz');
+    else
+        fxplay('ding1');
     var e = document.getElementById('qurl');
     if (e)
         e.src = "about:blank";
@@ -1232,6 +1247,7 @@ function startGame()
         seatNames.push(nama);
         seatOrigins.push(origin);
     }
+
     if (seats.length < 1)
     {
         console.log('*** no players');
@@ -1431,7 +1447,13 @@ function setup()
         buffer:true,
         autoplay:false,
         preload:true,
-        loop:false});
+        loop:false,
+        onend: function(id) {
+            setTimeout(function() {
+                location.reload();
+            }, 8000);
+        }
+    });
 }
 
 function preload()
@@ -1475,6 +1497,8 @@ var idBgMusic=0;
 var started = false;
 function startToPlay()
 {
+    if (!introMsgDiv)
+        return;
     if (started)
         return;
     toggleFullScreen();
@@ -1483,7 +1507,7 @@ function startToPlay()
         clearInterval(introTimerID);
     introTimerID = 0;
     introMsgDiv.innerHTML = '<i>p r e s e n t s</i>';
-    introMsgDiv.style.top =  "48%";
+    introMsgDiv.style.marginTop =  "150px";
     introMsgDiv.style.marginLeft =  "-76px";
     introMsgDiv.style.opacity = 1.0;
 
@@ -1519,8 +1543,7 @@ function startToPlay()
     }, 3000);
  }
 
-
- function init()  {
+function initATCG()  {
     mySlider = slider('.slides');
     barCounter = quizTimeoutInSeconds?quizTimeoutInSeconds:30; 
     urls = [];
@@ -1541,11 +1564,17 @@ function startToPlay()
     div.appendChild(app.view);
     app.stage.addChild(container);  
     window.onresize = resize;    
-    showSlide('#intro');
     resize();
-    introMsgDiv = document.getElementById('intromsg');
-    introTimerID = setInterval(introMsg, 200);
+    showSlide('#intro');
+    setTimeout(function() {
+        introMsgDiv = document.getElementById('intromsg');
+        if (introMsgDiv)
+        {
+            introMsgDiv.style.display='block';
+            introTimerID = setInterval(introMsg, 200);
+        }    
+    }, 3000);
 }
 
 document.oncontextmenu = new Function("return false;");
-document.onload = init();
+document.onload = initATCG();
