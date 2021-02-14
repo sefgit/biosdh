@@ -372,12 +372,20 @@ function nextPlayer()
     if (counters[curPlayer] < 11)
         doTurn();
     else {
+        var found = false;
         for(var a in counters) {
             if (counters[a] < 11)
             {
+                found = true;
                 nextPlayer();
                 break;
             }
+        }
+        if (!found) {
+            // we're done
+            setTimeout(function() {
+                donePlaying(true);
+            }, 3000);
         }
     }
 }
@@ -809,6 +817,8 @@ function endCredits()
     fxtimerstop();
     if (bgMusic)
         bgMusic.stop();
+    fxstop();
+    fxtimerstop();
     if (endMusic)
         endMusic.play();
     var e = document.getElementById('qurl');
@@ -857,6 +867,8 @@ function showThropy()
     fxtimerstop();
     if (bgMusic)
         bgMusic.stop();
+    fxstop();
+    fxtimerstop();
     fxtimerplay("tend");
     var winner_names = '';
     var counter = 0;
@@ -881,13 +893,16 @@ function showThropy()
     }, 20000);
 }
 
-function donePlaying()
+function donePlaying(silent=false)
 {
     fxstop();
     fxtimerstop();
     if (bgMusic)
         bgMusic.stop();
-    fxplay('ding1');
+    if (silent)
+        showSlide('#quiz');
+    else
+        fxplay('ding1');
     var e = document.getElementById('qurl');
     if (e)
         e.src = "about:blank";
